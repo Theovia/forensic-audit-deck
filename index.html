@@ -3,9 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Análisis Forense de Datos con IA</title>
+<title>Análisis Forense Técnico de Datos con IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;700&family=Young+Serif&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;700&family=Young+Serif&display=swap');
+  
+  
+  
+  
+  
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   
@@ -41,7 +48,7 @@
     display: none;
     flex-direction: column;
     justify-content: center;
-    padding: clamp(24px, 6vh, 80px) clamp(20px, 6vw, 100px);
+    padding: 80px 100px;
     opacity: 0;
     transition: opacity 0.5s ease;
   }
@@ -501,108 +508,63 @@
 
   /* TABLET */
   @media (max-width: 1024px) {
-    .slide { padding: clamp(20px, 4vh, 60px) clamp(20px, 5vw, 60px); }
+    .slide { padding: clamp(24px, 4vh, 60px) clamp(24px, 5vw, 60px); }
     .cover-title { font-size: clamp(36px, 6vw, 60px); }
-    .cover-subtitle { font-size: clamp(16px, 2vw, 20px); }
-    .slide-title { font-size: clamp(28px, 4.5vw, 40px); }
-    .grid-3, .price-cards { grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .flow { gap: 12px; }
-    .flow-step { padding: 20px 16px; }
-    .flow-desc { font-size: 12px; }
-    .stat-number { font-size: clamp(36px, 5vw, 56px); }
+    .slide-title { font-size: clamp(26px, 4vw, 40px); }
+    .stat-number { font-size: clamp(32px, 5vw, 56px); }
+    .flow { flex-wrap: wrap; }
+    .flow-step { flex: 1 1 45%; min-width: 200px; }
     .card { padding: 24px 20px; }
-    .card-title { font-size: 18px; }
     .card-body { font-size: 13px; }
+    .clean-table td, .clean-table th { padding: 10px 12px; font-size: 12px; }
     .highlight-box { padding: 24px; }
-    .highlight-box .hb-body { font-size: 14px; }
+    .highlight-box .hb-body { font-size: 13px; }
+    .price-cards { gap: 16px; }
+    .price-card { padding: 24px 20px; }
   }
 
   /* MOBILE */
   @media (max-width: 768px) {
-    .slide {
-      padding: 20px 16px 80px;
-      overflow-y: auto;
-    }
+    .slide { padding: 20px 16px; overflow-y: auto; }
+    .cover-title { font-size: 32px; }
+    .cover-subtitle { font-size: 15px; max-width: 100%; }
+    .slide-title { font-size: 24px; margin-bottom: 16px; }
+    .slide-body { font-size: 14px; }
 
-    .cover-title { font-size: 28px; line-height: 1.15; }
-    .cover-subtitle { font-size: 14px; margin-bottom: 24px; line-height: 1.5; max-width: 100%; }
-    .cover-tag { font-size: 10px; letter-spacing: 2px; margin-bottom: 16px; }
-    .cover-line { margin-bottom: 16px; }
-    .cover-meta { font-size: 10px; }
-
-    .slide-title { font-size: 22px; margin-bottom: 16px; line-height: 1.2; }
-    .slide-tag { font-size: 9px; margin-bottom: 8px; }
-    .slide-body { font-size: 14px; line-height: 1.5; }
-
-    .grid-3, .grid-2, .compare-cols, .price-cards {
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-    .stat-row {
-      flex-wrap: wrap;
-      gap: 16px;
-      margin: 16px 0;
-    }
-    .stat-item { flex: 1 1 40%; }
+    .grid-3, .grid-2, .compare-cols, .price-cards { grid-template-columns: 1fr; gap: 12px; }
+    .stat-row { flex-direction: column; gap: 16px; margin: 20px 0; }
     .stat-number { font-size: 32px; }
-    .stat-label { font-size: 10px; letter-spacing: 1px; }
 
-    .flow {
-      flex-direction: column;
-      gap: 8px;
-    }
+    .flow { flex-direction: column; gap: 8px; }
     .flow-step::after { display: none; }
-    .flow-step { padding: 14px 12px; }
-    .flow-num { font-size: 9px; margin-bottom: 4px; }
-    .flow-label { font-size: 14px; margin-bottom: 4px; }
-    .flow-desc { font-size: 11px; }
+    .flow-step { padding: 16px 14px; }
 
     .card { padding: 18px 14px; }
-    .card-number { font-size: 28px; top: 12px; right: 14px; }
-    .card-title { font-size: 16px; margin-bottom: 8px; }
-    .card-body { font-size: 12px; }
+    .card-number { font-size: 28px; }
+    .card-title { font-size: 16px; }
 
-    .highlight-box { padding: 14px 16px; margin-top: 14px; }
-    .highlight-box .hb-title { font-size: 15px; margin-bottom: 8px; }
-    .highlight-box .hb-body { font-size: 12px; line-height: 1.5; }
+    .highlight-box { padding: 16px; }
+    .highlight-box .hb-title { font-size: 15px; }
+    .highlight-box .hb-body { font-size: 12px; }
 
-    .clean-list li { font-size: 13px; padding: 6px 0 6px 18px; line-height: 1.4; }
-    .clean-list li::before { top: 12px; width: 5px; height: 5px; }
-
+    .clean-table { font-size: 11px; }
     .clean-table th { font-size: 9px; padding: 6px 8px; }
-    .clean-table td { font-size: 12px; padding: 8px; }
+    .clean-table td { font-size: 11px; padding: 8px; }
 
-    .compare-col { padding: 18px 14px; }
-    .compare-label { font-size: 10px; margin-bottom: 10px; }
-    .compare-item { font-size: 13px; padding: 5px 0; }
+    .compare-col { padding: 16px 14px; }
 
-    .price-card { padding: 20px 16px; text-align: left; }
+    .price-card { padding: 20px 16px; }
     .price-card-name { font-size: 18px; }
     .price-card-price { font-size: 22px; }
-    .price-card-time { font-size: 12px; }
-    .price-card-unit { font-size: 10px; }
-    .price-card-list li { font-size: 12px; }
 
-    .timeline { padding-left: 24px; margin-top: 16px; }
-    .tl-item { margin-bottom: 18px; }
-    .tl-item::before { left: -18px; width: 8px; height: 8px; }
-    .timeline::before { left: 6px; }
-    .tl-week { font-size: 9px; }
-    .tl-title { font-size: 14px; }
-    .tl-desc { font-size: 12px; }
-
-    .nav { bottom: 12px; right: 12px; gap: 8px; }
+    .nav { bottom: 12px; right: 12px; }
     .nav button { width: 36px; height: 36px; font-size: 14px; }
     .slide-counter { bottom: 18px; left: 16px; font-size: 10px; }
 
-    .slide-cover { padding: 32px 16px; }
-
-    h3[style] { font-size: 18px !important; margin-bottom: 12px !important; }
-  }
-
-  /* Touch swipe support */
-  @media (hover: none) {
-    .card:hover { border-color: rgba(59, 130, 246, 0.1); }
+    .clean-list li { font-size: 13px; }
+    .timeline { padding-left: 24px; }
+    .tl-title { font-size: 14px; }
+    .tl-desc { font-size: 12px; }
   }
 </style>
 </head>
@@ -614,8 +576,8 @@
   <div class="slide slide-cover active" data-slide="1">
     <div class="cover-tag">Propuesta de servicios</div>
     <div class="cover-line"></div>
-    <h1 class="cover-title">Análisis Forense<br>de Datos con IA</h1>
-    <p class="cover-subtitle">Reconstrucción contable desde fuentes primarias, detección de patrones de fraude y cuantificación de daño económico.</p>
+    <h1 class="cover-title">Análisis Forense<br>Técnico de Datos</h1>
+    <p class="cover-subtitle">Reconstrucción contable desde fuentes primarias mediante inteligencia artificial. Cruce exhaustivo de bancos, facturación electrónica y registros contables para detectar irregularidades y cuantificar daño económico.</p>
     <p class="cover-meta">CONFIDENCIAL · RAUL ZHOU · 2025</p>
   </div>
 
@@ -623,28 +585,28 @@
   <div class="slide" data-slide="2" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
     <div class="slide-tag">Quién soy</div>
     <h2 class="slide-title">Raul Zhou</h2>
-    <p class="slide-body" style="margin-bottom:32px;">Consultor de tecnología especializado en inteligencia artificial y análisis de datos. Ingeniero en Biotecnología con Maestría en IA por el Tec de Monterrey.</p>
+    <p class="slide-body" style="margin-bottom:32px;">Consultor de tecnología especializado en inteligencia artificial aplicada a análisis de datos financieros. Ingeniero en Biotecnología con Maestría en Inteligencia Artificial por el Tecnológico de Monterrey.</p>
 
     <div class="grid-2">
       <div>
-        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Lo que hago</h3>
+        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Capacidades técnicas</h3>
         <ul class="clean-list">
-          <li>Pipelines de datos: ingesta, limpieza, reconciliación automatizada</li>
-          <li>Modelos de detección de anomalías y análisis estadístico</li>
-          <li>Análisis de grafos para mapear relaciones ocultas</li>
-          <li>Automatización de procesos con IA</li>
-          <li>Reportes técnicos con evidencia trazable</li>
+          <li>Ingesta y normalización automatizada de datos contables, bancarios y fiscales</li>
+          <li>Reconciliación algorítmica: banco ↔ contabilidad ↔ facturación (CFDI)</li>
+          <li>Detección estadística de anomalías sobre el 100% de transacciones</li>
+          <li>Análisis de grafos para mapear relaciones entre proveedores, cuentas y personas</li>
+          <li>Expedientes técnicos con evidencia trazable y scripts reproducibles</li>
         </ul>
       </div>
       <div>
-        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Cómo funciona la alianza</h3>
+        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Modelo de colaboración</h3>
         <ul class="clean-list">
-          <li><strong style="color:var(--white)">Yo pongo:</strong> tecnología, análisis de datos, IA, velocidad</li>
-          <li><strong style="color:var(--white)">Tú pones:</strong> conocimiento contable, criterio fiscal, validación</li>
-          <li><strong style="color:var(--white)">Si se necesita:</strong> perito certificado para dictamen legal</li>
+          <li><strong style="color:var(--white)">Tecnología y análisis:</strong> pipelines de datos, IA, velocidad de procesamiento</li>
+          <li><strong style="color:var(--white)">Criterio contable:</strong> validación profesional, interpretación fiscal, firma</li>
+          <li><strong style="color:var(--white)">Soporte legal (si procede):</strong> perito certificado para dictamen ante autoridad</li>
         </ul>
         <div class="highlight-box" style="margin-top:20px; padding:20px 24px;">
-          <div class="hb-body" style="font-size:14px;">No soy contador ni auditor. Soy el lado tech que hace en días lo que manualmente toma meses — y tú validas que los hallazgos tengan sentido contable.</div>
+          <div class="hb-body" style="font-size:14px;">Mis servicios consisten en análisis técnico de datos mediante inteligencia artificial. Los hallazgos técnicos requieren validación e interpretación por parte del profesional contable responsable del caso.</div>
         </div>
       </div>
     </div>
@@ -653,7 +615,7 @@
   <!-- SLIDE 3: EL PROBLEMA -->
   <div class="slide" data-slide="3" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
     <div class="slide-tag">El problema</div>
-    <h2 class="slide-title">El fraude contable interno<br>es invisible hasta que es enorme</h2>
+    <h2 class="slide-title">El fraude contable interno es<br>invisible hasta que es enorme</h2>
     
     <div class="stat-row">
       <div class="stat-item">
@@ -680,7 +642,7 @@
   <div class="slide" data-slide="4" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
     <div class="slide-tag">La solución</div>
     <h2 class="slide-title">Reconstruir la verdad<br>desde las fuentes originales</h2>
-    <p class="slide-body" style="margin-bottom: 32px;">No revisamos la contabilidad existente — la <strong style="color:var(--white)">reconstruimos desde cero</strong> usando bancos, facturación electrónica (CFDI), y documentos soporte. Después cruzamos todo con inteligencia artificial para encontrar lo que no cuadra.</p>
+    <p class="slide-body" style="margin-bottom: 32px;">No revisamos la contabilidad que hizo el sospechoso — la <strong style="color:var(--white)">reconstruimos desde cero</strong> usando estados de cuenta bancarios, facturación electrónica (CFDI vía SAT), y documentos soporte. Después cruzamos las tres fuentes con inteligencia artificial para identificar cada discrepancia.</p>
     
     <div class="compare-cols">
       <div class="compare-col bad">
@@ -695,7 +657,7 @@
         <div class="compare-item">Reconstruye desde fuentes primarias independientes</div>
         <div class="compare-item">Análisis del 100% de transacciones</div>
         <div class="compare-item">Primeros patrones en días, diagnóstico en 2-3 semanas</div>
-        <div class="compare-item">Detección de anomalías estadísticas + análisis de relaciones</div>
+        <div class="compare-item">Detección estadística de anomalías + mapeo de relaciones entre entidades</div>
       </div>
     </div>
   </div>
@@ -734,44 +696,144 @@
     </div>
 
     <div class="highlight-box" style="margin-top: 28px;">
-      <div class="hb-title">¿Qué detecta más rápido con IA?</div>
-      <div class="hb-body">Proveedores que comparten cuenta bancaria o RFC relacionados · Montos justo por debajo de umbrales de autorización · Ajustes recurrentes concentrados en un solo usuario · Operaciones fuera de horario o antes de cierres · Redes de relaciones entre proveedores, cuentas y personas que manualmente tomaría semanas mapear.</div>
+      <div class="hb-title">Ejemplos concretos de detección con IA</div>
+      <div class="hb-body">Proveedor A, B y C comparten la misma CLABE interbancaria → probable empresa fachada · 87 facturas aprobadas por la misma persona entre 11pm y 2am → actividad fuera de horario · Montos recurrentes de $49,800 cuando el umbral de autorización es $50,000 → fraccionamiento intencional · Ajustes contables concentrados en un solo usuario días antes de cada cierre mensual · Red de 5 proveedores vinculados por RFC, dirección fiscal y representante legal común.</div>
     </div>
   </div>
 
   <!-- SLIDE 6: QUÉ NECESITAMOS -->
-  <div class="slide" data-slide="6" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
+  <div class="slide" data-slide="6" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%); padding: 60px 80px; overflow-y:auto;">
     <div class="slide-tag">Requerimientos</div>
-    <h2 class="slide-title">¿Qué necesitamos para empezar?</h2>
+    <h2 class="slide-title" style="font-size:36px; margin-bottom:12px;">¿Qué necesitamos y por qué?</h2>
+    <p style="color:var(--gray); font-size:15px; margin-bottom:28px; max-width:800px;">Cada dato tiene un propósito analítico específico. Sin estos insumos, el análisis no puede ejecutarse — no es opcional.</p>
 
-    <div class="grid-2">
-      <div>
-        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Información mínima</h3>
-        <ul class="clean-list">
-          <li>Export del ERP: pólizas, auxiliares, balanza, catálogo de cuentas</li>
-          <li>Maestro de proveedores y clientes</li>
-          <li>Estados de cuenta bancarios (digitales)</li>
-          <li>CFDI emitidos y recibidos (XML del SAT)</li>
-          <li>Soportes disponibles: PDFs, contratos, órdenes de compra</li>
-          <li>Bitácora de usuarios del sistema (si existe)</li>
-        </ul>
+    <!-- DATA REQUIREMENTS TABLE -->
+    <div style="display:grid; gap:2px; font-size:13px;">
+      <!-- Header -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:var(--accent); padding:10px 16px; font-weight:700; border-radius:8px 0 0 0;">Dato requerido</div>
+        <div style="background:var(--accent); padding:10px 16px; font-weight:700;">Para qué lo necesitamos</div>
+        <div style="background:var(--accent); padding:10px 16px; font-weight:700; border-radius:0 8px 0 0; text-align:center;">Prioridad</div>
       </div>
-      <div>
-        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Información del caso</h3>
-        <ul class="clean-list">
-          <li>Periodo bajo sospecha (fechas)</li>
-          <li>¿Cuándo empezó y terminó la persona?</li>
-          <li>Hipótesis inicial: ¿qué creen que pasó?</li>
-          <li>Objetivo: ¿despido, denuncia, recuperación?</li>
-          <li>¿Hay abogados involucrados?</li>
-          <li>Estimación preliminar del daño (si la hay)</li>
-        </ul>
+
+      <!-- Row 1 -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Pólizas / asientos contables (ERP)</div>
+        <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Es la columna vertebral. Cada movimiento contable queda aquí. Sin esto, no hay nada que analizar — es el equivalente a pedir un expediente médico sin el historial clínico.</div>
+        <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
+      </div>
+
+      <!-- Row 2 -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Auxiliares de cuentas</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Detalle transacción por transacción de cada cuenta. Permite reconstruir la trazabilidad completa: de dónde salió el dinero, a dónde fue, y quién lo autorizó.</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
+      </div>
+
+      <!-- Row 3 -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Balanza de comprobación mensual</div>
+        <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Foto mensual del estado de todas las cuentas. Permite detectar saltos anómalos entre periodos — si una cuenta sube 300% en un mes, algo pasó ahí.</div>
+        <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
+      </div>
+
+      <!-- Row 4 -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Estados de cuenta bancarios (digitales)</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Fuente de verdad externa e independiente. Lo que dice el banco vs. lo que dice la contabilidad. Si no cuadran, ahí está el problema. Es la prueba más difícil de manipular.</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
+      </div>
+
+      <!-- Row 5 -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">CFDI emitidos y recibidos (XML del SAT)</div>
+        <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Segunda fuente de verdad externa. El SAT registra cada factura. Cruzar CFDI vs. contabilidad vs. banco = triangulación de 3 fuentes. Proveedores fantasma se caen aquí: facturas que existen en contabilidad pero no en SAT.</div>
+        <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
+      </div>
+
+      <!-- Row 6 -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Maestro de proveedores (nombre, RFC, cuenta bancaria)</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Permite construir el grafo de relaciones: ¿hay proveedores que comparten RFC, dirección, cuenta bancaria o representante legal? Redes de empresas fachada se detectan aquí con análisis de grafos.</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
+      </div>
+
+      <!-- Row 7 -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Catálogo de cuentas</div>
+        <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Es el "diccionario" de la contabilidad. Sin él, los números no tienen significado — no sé si la cuenta 5102 es nómina o viáticos. Necesario para clasificar y agrupar correctamente.</div>
+        <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
+      </div>
+
+      <!-- Row 8 -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Bitácora de usuarios / logs del sistema</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">¿Quién hizo qué, cuándo? Registros a las 3am, modificaciones retroactivas, usuarios con acceso que no deberían tener. Si el fraude involucra manipulación de registros, aquí queda la huella digital.</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
+      </div>
+
+      <!-- Row 9 -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Contratos y órdenes de compra</div>
+        <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Verificar que el servicio o producto realmente se contrató y entregó. Facturas sin contrato ni orden de compra = señal roja. Permite validar que el gasto es legítimo.</div>
+        <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--green); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">MEDIO</span></div>
+      </div>
+
+      <!-- Row 10 -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Correos corporativos relevantes</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Contexto y comunicación. Autorizaciones por email, negociaciones con proveedores, presión para aprobar pagos. No siempre está disponible, pero cuando existe, conecta los puntos entre los números y las personas.</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--green); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">MEDIO</span></div>
+      </div>
+
+      <!-- DATOS CONDICIONALES -->
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px; margin-top:16px;">
+        <div style="background:var(--accent); padding:10px 16px; font-weight:700; border-radius:8px 0 0 0; font-size:13px;">Dato condicional (según hipótesis)</div>
+        <div style="background:var(--accent); padding:10px 16px; font-weight:700; font-size:13px;">Cuándo se necesita</div>
+        <div style="background:var(--accent); padding:10px 16px; font-weight:700; border-radius:0 8px 0 0; text-align:center; font-size:13px;">Aplica si</div>
+      </div>
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Maestro de clientes</div>
+        <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Si hay sospecha de fraude por ingresos: facturas falsas a clientes, descuentos no autorizados, notas de crédito ficticias.</div>
+        <div style="background:var(--slate); padding:10px 16px; text-align:center; font-size:11px; color:var(--amber);">Fraude en ingresos</div>
+      </div>
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Nómina completa + dispersiones</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Empleados fantasma, horas extras falsas, bonos no autorizados. Se cruza nómina vs dispersión bancaria vs plantilla de RRHH.</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center; font-size:11px; color:var(--amber);">Fraude en nómina</div>
+      </div>
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Inventarios y kárdex</div>
+        <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Faltantes, mermas infladas, salidas sin soporte. Se cruza inventario vs compras vs ventas para detectar fugas.</div>
+        <div style="background:var(--slate); padding:10px 16px; text-align:center; font-size:11px; color:var(--amber);">Fraude en inventario</div>
+      </div>
+      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Políticas de autorización + segregación de funciones</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Quién puede aprobar qué montos, quién captura vs quién autoriza vs quién paga. Permite detectar violaciones de control interno.</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center; font-size:11px; color:var(--amber);">Siempre útil</div>
       </div>
     </div>
 
-    <div class="highlight-box" style="margin-top:32px;">
-      <div class="hb-title">Seguridad y confidencialidad</div>
-      <div class="hb-body">NDA firmado antes de recibir cualquier información · Datos procesados localmente en infraestructura dedicada · Acceso restringido exclusivamente al equipo del proyecto · Destrucción o devolución de datos al finalizar · Entre más pronto se preserve la información, mejor — lo que se pierde o modifica no se recupera.</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:24px;">
+      <div class="highlight-box" style="padding:20px 24px; border-left:4px solid var(--amber);">
+        <div class="hb-title" style="font-size:14px;">Contexto del caso (indispensable)</div>
+        <div class="hb-body" style="font-size:12px; line-height:1.7; color:var(--gray);">
+          <strong style="color:var(--white);">Periodo bajo sospecha</strong> — define el volumen de datos a procesar y el costo<br>
+          <strong style="color:var(--white);">Hipótesis inicial</strong> — qué creen que pasó, para priorizar las reglas de detección correctas<br>
+          <strong style="color:var(--white);">Objetivo final</strong> — ¿despido, denuncia penal, recuperación civil? Esto determina el nivel de rigor del expediente<br>
+          <strong style="color:var(--white);">Estimación del daño</strong> — para dimensionar si el proyecto se justifica económicamente
+        </div>
+      </div>
+      <div class="highlight-box" style="padding:20px 24px; border-left:4px solid var(--accent);">
+        <div class="hb-title" style="font-size:14px;">Seguridad y confidencialidad</div>
+        <div class="hb-body" style="font-size:12px; line-height:1.7; color:var(--gray);">
+          <strong style="color:var(--white);">NDA firmado</strong> antes de recibir cualquier dato<br>
+          <strong style="color:var(--white);">Procesamiento 100% local</strong> — infraestructura dedicada, nada en la nube<br>
+          <strong style="color:var(--white);">Cadena de custodia digital</strong> — hash SHA-256 de cada archivo al recibirlo<br>
+          <strong style="color:var(--white);">Destrucción o devolución</strong> de todos los datos al finalizar<br>
+          <strong style="color:var(--white);">⚠️ Entre más pronto se preserve la información, mejor</strong> — lo que se modifica o destruye no se recupera
+        </div>
+      </div>
     </div>
   </div>
 
@@ -946,8 +1008,12 @@
     </div>
 
     <div class="highlight-box" style="margin-top:28px;">
-      <div class="hb-title">Para uso legal</div>
-      <div class="hb-body">El expediente técnico está diseñado para alimentar directamente a un perito certificado o abogado. Yo hago el 90% del trabajo analítico — el perito valida, firma, y lo presenta. Esto reduce tiempo y costo significativamente vs. un peritaje tradicional desde cero.</div>
+      <div class="hb-title">Admisibilidad legal</div>
+      <div class="hb-body">El expediente técnico está diseñado como insumo directo para perito certificado o abogado litigante. El análisis técnico cubre el grueso del trabajo de datos — el perito valida, firma y presenta ante autoridad. Esto reduce significativamente el tiempo y costo de un peritaje tradicional desde cero.</div>
+    </div>
+
+    <div style="margin-top:20px; padding:16px 24px; border:1px solid rgba(148,163,184,0.15); border-radius:10px; background:rgba(15,23,42,0.5);">
+      <p style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--mid); line-height:1.7;">NATURALEZA DE LOS SERVICIOS — Los servicios descritos consisten exclusivamente en análisis técnico de datos mediante herramientas de inteligencia artificial y ciencia de datos. No constituyen auditoría contable, dictamen pericial, ni opinión fiscal. Los hallazgos técnicos deben ser interpretados y validados por el profesional contable responsable del caso antes de cualquier uso ante autoridades judiciales, fiscales o administrativas.</p>
     </div>
   </div>
 
@@ -955,8 +1021,8 @@
   <div class="slide slide-cover" data-slide="11">
     <div class="cover-tag">Siguiente paso</div>
     <div class="cover-line"></div>
-    <h1 class="cover-title" style="font-size:56px;">¿Empezamos con<br>el diagnóstico?</h1>
-    <p class="cover-subtitle" style="font-size:20px; max-width:700px;">El primer paso es una conversación de 30 minutos para entender el caso, definir alcance, y confirmar qué información está disponible. Sin compromiso.</p>
+    <h1 class="cover-title" style="font-size:56px;">¿Hacemos el<br>diagnóstico?</h1>
+    <p class="cover-subtitle" style="font-size:20px; max-width:700px;">El primer paso es una conversación para entender el caso, dimensionar el volumen de datos, y confirmar qué información está disponible. A partir de ahí, cotización formal en 24 horas.</p>
     
     <div style="margin-top: 40px;">
       <p style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--accent); letter-spacing:2px; margin-bottom:12px;">CONTACTO</p>
@@ -968,7 +1034,7 @@
 </div>
 
 <!-- NAV -->
-<div class="slide-counter"><span id="current">1</span> / <span id="total">9</span></div>
+<div class="slide-counter"><span id="current">1</span> / <span id="total">11</span></div>
 <div class="nav">
   <button onclick="go(-1)">←</button>
   <button onclick="go(1)">→</button>
@@ -995,7 +1061,6 @@
     if (e.key === 'ArrowLeft') go(-1);
   });
 
-  // Touch swipe
   let tx = 0;
   document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
   document.addEventListener('touchend', e => {
