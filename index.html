@@ -578,24 +578,24 @@
     <div class="cover-line"></div>
     <h1 class="cover-title">Análisis Forense<br>Técnico de Datos</h1>
     <p class="cover-subtitle">Reconstrucción contable desde fuentes primarias mediante inteligencia artificial. Cruce exhaustivo de bancos, facturación electrónica y registros contables para detectar irregularidades y cuantificar daño económico.</p>
-    <p class="cover-meta">CONFIDENCIAL · RAUL ZHOU · 2025</p>
+    <p class="cover-meta">CONFIDENCIAL · RAUL ZHOU · 2026</p>
   </div>
 
   <!-- SLIDE 2: QUIÉN SOY -->
   <div class="slide" data-slide="2" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
     <div class="slide-tag">Quién soy</div>
     <h2 class="slide-title">Raul Zhou</h2>
-    <p class="slide-body" style="margin-bottom:32px;">Consultor de tecnología especializado en inteligencia artificial aplicada a análisis de datos financieros. Ingeniero en Biotecnología con Maestría en Inteligencia Artificial por el Tecnológico de Monterrey.</p>
+    <p class="slide-body" style="margin-bottom:32px;">Consultor de inteligencia artificial aplicada a análisis de datos financieros. Ingeniero en Biotecnología con Maestría en IA por el Tecnológico de Monterrey. Diseño pipelines que procesan cientos de miles de transacciones y cruzan fuentes que un humano tardaría meses en revisar.</p>
 
     <div class="grid-2">
       <div>
-        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Capacidades técnicas</h3>
+        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Qué puedo hacer que otros no</h3>
         <ul class="clean-list">
-          <li>Ingesta y normalización automatizada de datos contables, bancarios y fiscales</li>
-          <li>Reconciliación algorítmica: banco ↔ contabilidad ↔ facturación (CFDI)</li>
-          <li>Detección estadística de anomalías sobre el 100% de transacciones</li>
-          <li>Análisis de grafos para mapear relaciones entre proveedores, cuentas y personas</li>
-          <li>Expedientes técnicos con evidencia trazable y scripts reproducibles</li>
+          <li>Procesar el <strong style="color:var(--white)">100% de transacciones</strong> — no muestreo, no depender de suerte</li>
+          <li>Cruzar banco ↔ contabilidad ↔ SAT <strong style="color:var(--white)">automáticamente</strong> y detectar cada discrepancia</li>
+          <li>Detectar patrones estadísticos invisibles al ojo humano (Benford, clustering, anomalías temporales)</li>
+          <li>Mapear redes de proveedores/cuentas con análisis de grafos — desmantelar empresas fachada</li>
+          <li>Generar expedientes técnicos con scripts reproducibles — cualquier tercero puede verificar</li>
         </ul>
       </div>
       <div>
@@ -695,9 +695,30 @@
       </div>
     </div>
 
-    <div class="highlight-box" style="margin-top: 28px;">
-      <div class="hb-title">Ejemplos concretos de detección con IA</div>
-      <div class="hb-body">Proveedor A, B y C comparten la misma CLABE interbancaria → probable empresa fachada · 87 facturas aprobadas por la misma persona entre 11pm y 2am → actividad fuera de horario · Montos recurrentes de $49,800 cuando el umbral de autorización es $50,000 → fraccionamiento intencional · Ajustes contables concentrados en un solo usuario días antes de cada cierre mensual · Red de 5 proveedores vinculados por RFC, dirección fiscal y representante legal común.</div>
+    <div style="margin-top: 28px;">
+      <h3 style="font-family:'Young Serif',serif; font-size:20px; color:var(--accent2); margin-bottom:16px;">Ejemplos concretos de detección con IA</h3>
+      <div style="display:grid; gap:8px;">
+        <div style="display:flex; gap:12px; align-items:flex-start; background:rgba(30,41,59,0.4); padding:12px 16px; border-radius:10px; border-left:3px solid var(--accent);">
+          <span style="color:var(--accent); font-family:'IBM Plex Mono',monospace; font-size:11px; white-space:nowrap; padding-top:2px;">GRAFOS</span>
+          <span style="font-size:14px; color:var(--gray); line-height:1.5;">Proveedor A, B y C comparten la misma CLABE interbancaria → <strong style="color:var(--white)">probable empresa fachada</strong></span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; background:rgba(30,41,59,0.4); padding:12px 16px; border-radius:10px; border-left:3px solid var(--amber);">
+          <span style="color:var(--amber); font-family:'IBM Plex Mono',monospace; font-size:11px; white-space:nowrap; padding-top:2px;">PATRÓN</span>
+          <span style="font-size:14px; color:var(--gray); line-height:1.5;">87 facturas aprobadas por la misma persona entre 11pm y 2am → <strong style="color:var(--white)">actividad fuera de horario</strong></span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; background:rgba(30,41,59,0.4); padding:12px 16px; border-radius:10px; border-left:3px solid var(--red);">
+          <span style="color:var(--red); font-family:'IBM Plex Mono',monospace; font-size:11px; white-space:nowrap; padding-top:2px;">UMBRAL</span>
+          <span style="font-size:14px; color:var(--gray); line-height:1.5;">Montos recurrentes de $49,800 cuando el límite de autorización es $50,000 → <strong style="color:var(--white)">fraccionamiento intencional</strong></span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; background:rgba(30,41,59,0.4); padding:12px 16px; border-radius:10px; border-left:3px solid var(--green);">
+          <span style="color:var(--green); font-family:'IBM Plex Mono',monospace; font-size:11px; white-space:nowrap; padding-top:2px;">PERFIL</span>
+          <span style="font-size:14px; color:var(--gray); line-height:1.5;">Ajustes contables concentrados en un solo usuario días antes de cada cierre mensual</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; background:rgba(30,41,59,0.4); padding:12px 16px; border-radius:10px; border-left:3px solid var(--accent);">
+          <span style="color:var(--accent); font-family:'IBM Plex Mono',monospace; font-size:11px; white-space:nowrap; padding-top:2px;">RED</span>
+          <span style="font-size:14px; color:var(--gray); line-height:1.5;">Red de 5 proveedores vinculados por RFC, dirección fiscal y representante legal común</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -895,10 +916,40 @@
     </div>
 
     <p style="font-size:13px; color:var(--mid); text-align:center; margin-top:24px; font-family:'IBM Plex Mono',monospace;">Precio según volumen de transacciones, entidades y años bajo revisión. No incluye honorarios de perito externo ni asesoría legal. Cotización final después de reunión de scoping.</p>
+    <p style="font-size:12px; color:var(--accent); text-align:center; margin-top:12px; font-family:'IBM Plex Mono',monospace;"><a href="./anexo-tecnico.html" style="color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(59,130,246,0.3);">📄 Ver anexo técnico con detalle de factibilidad por fase →</a></p>
   </div>
 
-  <!-- SLIDE 8: TIMELINE -->
+  <!-- SLIDE 8: ROI -->
   <div class="slide" data-slide="8" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
+    <div class="slide-tag">Retorno de inversión</div>
+    <h2 class="slide-title">¿Por qué vale la pena?</h2>
+
+    <div class="grid-3">
+      <div class="card" style="text-align:center; padding:40px 28px;">
+        <div style="font-family:'Young Serif',serif; font-size:48px; color:var(--accent); margin-bottom:8px;">5%</div>
+        <div style="font-size:14px; color:var(--gray); margin-bottom:16px;">de ingresos anuales perdidos por fraude promedio (ACFE)</div>
+        <div style="font-size:13px; color:var(--white); background:rgba(59,130,246,0.1); padding:8px 12px; border-radius:8px;">Una empresa de $200M MXN/año pierde ~$10M</div>
+      </div>
+      <div class="card" style="text-align:center; padding:40px 28px; border-color:rgba(59,130,246,0.3);">
+        <div style="font-family:'Young Serif',serif; font-size:48px; color:var(--green); margin-bottom:8px;">~1%</div>
+        <div style="font-size:14px; color:var(--gray); margin-bottom:16px;">del daño típico es lo que cuesta el diagnóstico</div>
+        <div style="font-size:13px; color:var(--white); background:rgba(34,197,94,0.1); padding:8px 12px; border-radius:8px;">$350K–$600K para descubrir $5M–$50M+ en fraude</div>
+      </div>
+      <div class="card" style="text-align:center; padding:40px 28px;">
+        <div style="font-family:'Young Serif',serif; font-size:48px; color:var(--amber); margin-bottom:8px;">60%</div>
+        <div style="font-size:14px; color:var(--gray); margin-bottom:16px;">menos tiempo de peritaje si ya existe expediente técnico</div>
+        <div style="font-size:13px; color:var(--white); background:rgba(251,191,36,0.1); padding:8px 12px; border-radius:8px;">El perito valida, no reconstruye desde cero</div>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="margin-top:28px;">
+      <div class="hb-title">El costo de NO investigar</div>
+      <div class="hb-body">Cada mes que pasa sin detectar el fraude es un mes más de pérdidas. El fraude contable interno no se detiene solo — se sofistica. La persona aprende qué funciona y escala los montos. Detectar temprano no solo recupera lo perdido, previene lo que se iba a perder.</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: TIMELINE -->
+  <div class="slide" data-slide="9" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
     <div class="slide-tag">Calendario</div>
     <h2 class="slide-title">Cronograma típico</h2>
 
@@ -940,8 +991,8 @@
     </div>
   </div>
 
-  <!-- SLIDE 9: ENTREGABLES -->
-  <div class="slide" data-slide="9" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
+  <!-- SLIDE 10: ENTREGABLES -->
+  <div class="slide" data-slide="10" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
     <div class="slide-tag">Entregables</div>
     <h2 class="slide-title">¿Qué recibes al final?</h2>
 
@@ -981,8 +1032,8 @@
     <p style="font-size:14px; color:var(--gray); margin-top:28px;">Todo el expediente está diseñado para ser utilizable por abogados, auditores externos, o peritos en caso de procedimiento legal.</p>
   </div>
 
-  <!-- SLIDE 10: ALCANCE -->
-  <div class="slide" data-slide="10" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
+  <!-- SLIDE 11: ALCANCE -->
+  <div class="slide" data-slide="11" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
     <div class="slide-tag">Alcance</div>
     <h2 class="slide-title">Qué incluye y qué no</h2>
 
@@ -1017,8 +1068,8 @@
     </div>
   </div>
 
-  <!-- SLIDE 11: CIERRE -->
-  <div class="slide slide-cover" data-slide="11">
+  <!-- SLIDE 12: CIERRE -->
+  <div class="slide slide-cover" data-slide="12">
     <div class="cover-tag">Siguiente paso</div>
     <div class="cover-line"></div>
     <h1 class="cover-title" style="font-size:56px;">¿Hacemos el<br>diagnóstico?</h1>
@@ -1028,6 +1079,10 @@
       <p style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--accent); letter-spacing:2px; margin-bottom:12px;">CONTACTO</p>
       <p style="font-size:18px; color:var(--white); margin-bottom:6px;">Raul Zhou</p>
       <p style="font-size:15px; color:var(--gray);">raul.chio.leon@gmail.com</p>
+    </div>
+
+    <div style="margin-top:32px;">
+      <a href="./anexo-tecnico.html" style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--accent); text-decoration:none; letter-spacing:1px; border:1px solid rgba(59,130,246,0.3); padding:10px 20px; border-radius:8px; transition:all 0.2s;">📄 ANEXO TÉCNICO — DETALLE DE FACTIBILIDAD POR FASE</a>
     </div>
   </div>
 
