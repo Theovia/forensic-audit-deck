@@ -47,10 +47,11 @@
     inset: 0;
     display: none;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 80px 100px;
     opacity: 0;
     transition: opacity 0.5s ease;
+    overflow-y: auto;
   }
   .slide.active { display: flex; opacity: 1; }
 
@@ -208,10 +209,15 @@
   }
 
   /* TABLE */
+  .table-wrapper {
+    overflow-x: auto;
+    margin-top: 24px;
+    -webkit-overflow-scrolling: touch;
+  }
   .clean-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 24px;
+    table-layout: fixed;
   }
   .clean-table th {
     font-family: 'IBM Plex Mono', monospace;
@@ -731,142 +737,142 @@
     <!-- DATA REQUIREMENTS TABLE -->
     <div style="display:grid; gap:2px; font-size:13px;">
       <!-- Header -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--accent); padding:10px 16px; font-weight:700; border-radius:8px 0 0 0;">Dato requerido</div>
         <div style="background:var(--accent); padding:10px 16px; font-weight:700;">Para qué lo necesitamos</div>
         <div style="background:var(--accent); padding:10px 16px; font-weight:700; border-radius:0 8px 0 0; text-align:center;">Prioridad</div>
       </div>
 
       <!-- Row 1 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Export completo del ERP (pólizas con detalle de auxiliares, catálogo de cuentas)</div>
         <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Columna vertebral del análisis. Cada movimiento contable con su detalle por cuenta: de dónde salió el dinero, a dónde fue, quién lo capturó. Sin esto, no hay nada que analizar.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
       </div>
 
       <!-- Row 2 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Balanza de comprobación mensual</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Foto mensual del estado de todas las cuentas. Sirve como validación cruzada: comparar la balanza reportada vs. la que recalculamos desde las pólizas. Si no cuadran, hubo manipulación post-cierre.</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
       </div>
 
       <!-- Row 3 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Estados de cuenta bancarios (digitales)</div>
         <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Fuente de verdad externa e independiente. Lo que dice el banco vs. lo que dice la contabilidad. Si no cuadran, ahí está el problema. Es la prueba más difícil de manipular.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
       </div>
 
       <!-- Row 5 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">CFDI emitidos y recibidos (XML del SAT)</div>
         <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Segunda fuente de verdad externa. El SAT registra cada factura. Cruzar CFDI vs. contabilidad vs. banco = triangulación de 3 fuentes. Proveedores fantasma se caen aquí: facturas que existen en contabilidad pero no en SAT.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
       </div>
 
       <!-- Row 6 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Maestro de proveedores (nombre, RFC, cuenta bancaria)</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Permite construir el grafo de relaciones: ¿hay proveedores que comparten RFC, dirección, cuenta bancaria o representante legal? Redes de empresas fachada se detectan aquí con análisis de grafos.</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
       </div>
 
       <!-- Row 7 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Catálogo de cuentas</div>
         <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Es el "diccionario" de la contabilidad. Sin él, los números no tienen significado — no sé si la cuenta 5102 es nómina o viáticos. Necesario para clasificar y agrupar correctamente.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
       </div>
 
       <!-- Row 8 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Bitácora de usuarios / logs del sistema</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">¿Quién hizo qué, cuándo? Registros a las 3am, modificaciones retroactivas, usuarios con acceso que no deberían tener. Si el fraude involucra manipulación de registros, aquí queda la huella digital.</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
       </div>
 
       <!-- Row 9 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Contratos y órdenes de compra</div>
         <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Verificar que el servicio o producto realmente se contrató y entregó. Facturas sin contrato ni orden de compra = señal roja. Permite validar que el gasto es legítimo.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--green); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">MEDIO</span></div>
       </div>
 
       <!-- Row 10 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Correos corporativos relevantes</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Autorizaciones por email, negociaciones con proveedores, presión para aprobar pagos. Conecta los datos numéricos con las personas y la intención. Evidencia de contexto invaluable para atribución.</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
       </div>
 
       <!-- Row 11 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Auxiliar de folios de comprobantes fiscales</div>
         <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Liga cada UUID del CFDI con su póliza contable. Es el puente directo entre facturación y contabilidad — si este auxiliar existe, la reconciliación CFDI↔pólizas es automática y exacta.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
       </div>
 
       <!-- Row 12 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">DIOT (Declaración Informativa de Operaciones con Terceros)</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Lista de proveedores y montos reportados al SAT mensualmente. Cruzar DIOT vs maestro de proveedores vs CFDI detecta proveedores que se pagaron pero nunca se declararon — señal fuerte de operación irregular.</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
       </div>
 
       <!-- Row 13 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Declaraciones mensuales y anuales (ISR, IVA)</div>
         <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Lo que se declaró al SAT vs lo que dicen los libros contables. Si la contabilidad fue manipulada pero las declaraciones no (o viceversa), las inconsistencias son evidencia directa.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
       </div>
 
       <!-- Row 14 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Conciliaciones bancarias previas</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Si el sospechoso hacía las conciliaciones, ver cómo justificó las diferencias entre banco y contabilidad. Las partidas en conciliación son donde se esconden muchas irregularidades.</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
       </div>
 
       <!-- Row 15 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Papeles de trabajo de cierre anual</div>
         <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Ajustes de cierre, reclasificaciones, provisiones. Los ajustes de cierre son uno de los mecanismos más comunes para ocultar fraude — se "corrige" la contabilidad con asientos de reclasificación que diluyen las diferencias.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
       </div>
 
       <!-- DATOS CONDICIONALES -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px; margin-top:16px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px; margin-top:16px;">
         <div style="background:var(--accent); padding:10px 16px; font-weight:700; border-radius:8px 0 0 0; font-size:13px;">Dato condicional (según hipótesis)</div>
         <div style="background:var(--accent); padding:10px 16px; font-weight:700; font-size:13px;">Cuándo se necesita</div>
         <div style="background:var(--accent); padding:10px 16px; font-weight:700; border-radius:0 8px 0 0; text-align:center; font-size:13px;">Aplica si</div>
       </div>
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Maestro de clientes</div>
         <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Si hay sospecha de fraude por ingresos: facturas falsas a clientes, descuentos no autorizados, notas de crédito ficticias.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center; font-size:11px; color:var(--amber);">Fraude en ingresos</div>
       </div>
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Nómina completa + dispersiones</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Empleados fantasma, horas extras falsas, bonos no autorizados. Se cruza nómina vs dispersión bancaria vs plantilla de RRHH.</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center; font-size:11px; color:var(--amber);">Fraude en nómina</div>
       </div>
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Inventarios y kárdex</div>
         <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Faltantes, mermas infladas, salidas sin soporte. Se cruza inventario vs compras vs ventas para detectar fugas.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center; font-size:11px; color:var(--amber);">Fraude en inventario</div>
       </div>
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Políticas de autorización + segregación de funciones</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Quién puede aprobar qué montos, quién captura vs quién autoriza vs quién paga. Permite detectar violaciones de control interno.</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center; font-size:11px; color:var(--amber);">Siempre útil</div>
       </div>
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Acuses de contabilidad electrónica (SAT)</div>
         <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Confirman qué balanzas y catálogos se enviaron oficialmente al SAT. Si la contabilidad interna difiere de lo enviado, hay manipulación post-envío.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center; font-size:11px; color:var(--amber);">Sospecha de alteración</div>
       </div>
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
+      <div style="display:grid; grid-template-columns:2fr 3fr 120px; gap:2px;">
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Cheques emitidos / fichas de depósito</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Imágenes de cheques y fichas del banco. Verificar endosos, beneficiarios reales, firmas. Detecta cheques cobrados por personas no autorizadas.</div>
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center; font-size:11px; color:var(--amber);">Fraude con cheques</div>
