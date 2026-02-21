@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anexo Técnico — Análisis Forense de Datos con IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;700&family=Young+Serif&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050508;
+    --bg2: #0a0a10;
+    --surface: #10101a;
+    --border: rgba(255,255,255,0.06);
+    --border-accent: rgba(59,130,246,0.15);
+    --white: #f0f0f5;
+    --gray: #8b8b9e;
+    --muted: #55556a;
+    --accent: #3b82f6;
+    --accent-dim: rgba(59,130,246,0.08);
+    --green: #34d399;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+    --cyan: #06b6d4;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Work Sans', system-ui, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    padding: 14px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(5,5,8,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-brand { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; color:var(--accent); letter-spacing:3px; text-transform:uppercase; }
+  .nav-tag { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted); }
+
+  section {
+    padding: 80px 24px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  section:first-of-type { padding-top: 120px; }
+
+  .divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+    max-width: 960px; margin: 0 auto;
+  }
+
+  .tag {
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px; font-weight:500; color:var(--accent);
+    letter-spacing:3px; text-transform:uppercase;
+    margin-bottom:14px; display:block;
+  }
+  h1 {
+    font-family:'Young Serif',serif;
+    font-size: clamp(32px,5vw,48px);
+    font-weight:900; line-height:1.08;
+    margin-bottom:20px; letter-spacing:-0.02em;
+  }
+  h2 {
+    font-family:'Young Serif',serif;
+    font-size: clamp(24px,4vw,34px);
+    font-weight:700; line-height:1.1;
+    margin-bottom:16px;
+  }
+  h3 {
+    font-size:18px; font-weight:700;
+    margin-bottom:10px;
+  }
+  .lead {
+    font-size: clamp(15px,2vw,18px);
+    color: var(--gray); line-height:1.7;
+    max-width: 700px;
+  }
+
+  .process-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 28px;
+    margin-bottom: 16px;
+    transition: border-color 0.3s;
+  }
+  .process-block:hover { border-color: var(--border-accent); }
+  .pb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pb-title {
+    font-family:'Young Serif',serif;
+    font-size: 20px;
+    color: var(--white);
+  }
+  .pb-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pb-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 14px;
+  }
+  .pb-label {
+    font-family:'IBM Plex Mono',monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding-top: 3px;
+  }
+  .pb-value { color: var(--gray); line-height: 1.5; }
+  .pb-value strong { color: var(--white); }
+
+  .tag-pill {
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9px; font-weight:700;
+    letter-spacing:1px; text-transform:uppercase;
+    padding:3px 10px; border-radius:20px;
+  }
+  .tag-easy { background:rgba(34,211,153,0.15); color:var(--green); }
+  .tag-medium { background:rgba(251,191,36,0.15); color:var(--amber); }
+  .tag-hard { background:rgba(248,113,113,0.15); color:var(--red); }
+  .tag-auto { background:rgba(16,185,129,0.12); color:var(--green); }
+  .tag-ai { background:rgba(168,85,247,0.12); color:var(--purple); }
+  .tag-script { background:rgba(59,130,246,0.12); color:var(--blue); }
+  .tag-manual { background:rgba(251,191,36,0.12); color:var(--amber); }
+
+  .callout {
+    border-left: 3px solid var(--amber);
+    background: rgba(251,191,36,0.04);
+    padding: 16px 20px;
+    border-radius: 0 10px 10px 0;
+    margin-top: 12px;
+  }
+  .callout-red {
+    border-left-color: var(--red);
+    background: rgba(248,113,113,0.04);
+  }
+  .callout-green {
+    border-left-color: var(--green);
+    background: rgba(34,211,153,0.04);
+  }
+  .callout p {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+  .callout strong { color: var(--white); }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .summary-card h4 {
+    font-family:'IBM Plex Mono',monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .summary-card .big {
+    font-family:'Young Serif',serif;
+    font-size: 28px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .summary-card p {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  .phase-label {
+    display: inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .phase-1 { background: rgba(59,130,246,0.12); color: var(--blue); }
+  .phase-2 { background: rgba(168,85,247,0.12); color: var(--purple); }
+  .phase-3 { background: rgba(248,113,113,0.12); color: var(--red); }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: opacity 0.2s;
+  }
+  .back-link:hover { opacity: 0.7; }
+
+  .disclaimer {
+    font-family:'IBM Plex Mono',monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.7;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-top: 32px;
+  }
+
+  @media (max-width: 600px) {
+    .pb-row { grid-template-columns: 1fr; gap: 2px; }
+    .pb-label { padding-top: 8px; }
+    section { padding: 48px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">Raul Zhou · Forense</span>
+  <span class="nav-tag">Anexo técnico de factibilidad</span>
+</nav>
+
+<!-- INTRO -->
+<section>
+  <a href="./index.html" class="back-link">← Volver a la propuesta</a>
+  <div style="margin-top:32px;">
+    <span class="tag">Anexo técnico</span>
+    <h1>Factibilidad de cada<br>etapa forense</h1>
+    <p class="lead">Este documento detalla la implementación técnica real de cada fase del análisis forense: qué tecnología se usa, qué tan probado está, qué puede salir mal, y qué necesitas proporcionar para que funcione.</p>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <h4>Fases totales</h4>
+      <div class="big">5</div>
+      <p>Preservación, Reconstrucción, Reconciliación, Detección, Documentación</p>
+    </div>
+    <div class="summary-card">
+      <h4>Tiempo total</h4>
+      <div class="big">3–8 semanas</div>
+      <p>Diagnóstico en 2–3 semanas, investigación profunda en 4–8</p>
+    </div>
+    <div class="summary-card">
+      <h4>Nivel de automatización</h4>
+      <div class="big">~75%</div>
+      <p>La mayoría del trabajo de datos es automático. El criterio humano entra en interpretación y validación.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FASE 1: PRESERVACIÓN -->
+<section>
+  <span class="phase-label phase-1">Fase 1 · Semana 1</span>
+  <h2>Preservación y Cadena de Custodia</h2>
+  <p class="lead" style="margin-bottom:32px;">Asegurar que toda la información esté intacta, catalogada, y que cualquier hallazgo sea defendible legalmente.</p>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Ingesta y hashing de evidencia</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-easy">Alta factibilidad</span>
+        <span class="tag-pill tag-script">Script</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Recibe todos los archivos del caso</strong> (exports de ERP, estados de cuenta, XMLs del SAT, documentos soporte) y genera un hash SHA-256 de cada uno. Se crea un manifiesto inmutable que certifica que nada fue alterado después de la recepción.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Scripts Python con hashlib para SHA-256. Almacenamiento en directorio WORM (write-once, read-many). Manifiesto CSV con nombre, hash, fecha, tamaño. Todo versionado en Git.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Requiere</span>
+      <span class="pb-value">Que el cliente entregue los archivos en formato digital. Idealmente exports directos del ERP (no capturas de pantalla ni PDFs escaneados). Los bancarios pueden ser PDF, Excel o CSV.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Riesgos</span>
+      <span class="pb-value">Si los archivos ya fueron manipulados antes de entregarlos, la cadena de custodia aplica desde la recepción, no antes. Se documenta explícitamente esta limitación.</span>
+    </div>
+    <div class="callout callout-green">
+      <p><strong>Factibilidad: ALTA.</strong> Es la fase más directa — hashing y catalogación son procedimientos estándar en cualquier investigación digital. No depende de IA.</p>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Definición de alcance y scoping</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-easy">Alta factibilidad</span>
+        <span class="tag-pill tag-manual">Manual</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Define los límites de la investigación:</strong> periodo temporal, entidades legales, tipos de fraude a buscar, hipótesis iniciales, y objetivo final (despido, denuncia penal, recuperación civil).</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Reunión estructurada con checklist predefinido. Documento SCOPE.md con todos los parámetros. Define qué datos son críticos vs complementarios.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Requiere</span>
+      <span class="pb-value">Participación activa del cliente (o su abogado/contador) para dar contexto. Hipótesis inicial del caso. Lista de personas involucradas.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Riesgos</span>
+      <span class="pb-value">Si el alcance no está bien definido, el proyecto se expande indefinidamente. Se acuerda scope por escrito antes de iniciar.</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FASE 2: RECONSTRUCCIÓN -->
+<section>
+  <span class="phase-label phase-1">Fase 2 · Semana 1–2</span>
+  <h2>Reconstrucción Contable</h2>
+  <p class="lead" style="margin-bottom:32px;">Armar la contabilidad real desde fuentes primarias independientes — sin confiar en lo que registró el sospechoso.</p>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Parseo de XMLs del SAT (CFDI)</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-easy">Alta factibilidad</span>
+        <span class="tag-pill tag-script">Script</span>
+        <span class="tag-pill tag-auto">Automático</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Extrae datos estructurados de cada CFDI:</strong> emisor, receptor, RFC, conceptos, impuestos, UUID, fecha, total, tipo de comprobante (ingreso/egreso/traslado/nómina/pago). Los XMLs del SAT son la fuente más confiable porque son emitidos por un tercero (el SAT) y tienen sello digital.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Parser Python con lxml. El esquema CFDI 4.0 es público y estándar. Se extrae a tablas DuckDB/Parquet para consultas rápidas. Procesamiento de 100K+ XMLs en minutos.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Requiere</span>
+      <span class="pb-value">Descarga masiva del portal del SAT (el cliente o su contador pueden hacerla). Idealmente todos los XMLs emitidos y recibidos del periodo bajo revisión.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Riesgos</span>
+      <span class="pb-value">XMLs corruptos o incompletos. CFDIs cancelados que siguen en el paquete. Complementos de pago que complican el matching. Todo manejable con reglas de validación.</span>
+    </div>
+    <div class="callout callout-green">
+      <p><strong>Factibilidad: ALTA.</strong> El CFDI es un estándar XML bien documentado. Lo he parseado múltiples veces. Es la base más sólida de toda la investigación.</p>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Parseo de estados de cuenta bancarios</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-medium">Media factibilidad</span>
+        <span class="tag-pill tag-script">Script</span>
+        <span class="tag-pill tag-ai">IA</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Extrae cada movimiento bancario</strong> (fecha, concepto, referencia, monto, saldo) de los estados de cuenta. Los bancarios son la segunda fuente de verdad — el banco registra lo que realmente entró y salió de las cuentas.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Si vienen en Excel/CSV: parseo directo. Si vienen en PDF: extracción con Camelot/Tabula para tablas, con fallback a OCR (Tesseract) + validación por IA para PDFs complejos. Normalización a esquema canónico.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Requiere</span>
+      <span class="pb-value">Estados de cuenta de TODAS las cuentas bancarias de la(s) entidad(es), completos del periodo bajo revisión. Formato digital (no fotos ni fotocopias).</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Riesgos</span>
+      <span class="pb-value">PDFs con formato propietario de cada banco (cada banco es diferente). Movimientos con descripciones ambiguas. Cuentas que el sospechoso no declaró.</span>
+    </div>
+    <div class="callout">
+      <p><strong>⚠️ Factor variable:</strong> La calidad del parseo depende 100% del formato que entregue el banco. Excel/CSV = perfecto. PDF tabular = bueno. PDF escaneado = requiere más trabajo y validación manual de un porcentaje.</p>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Parseo de pólizas contables del ERP</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-medium">Media factibilidad</span>
+        <span class="tag-pill tag-script">Script</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Extrae cada asiento contable</strong> (póliza, fecha, cuenta, concepto, cargo, abono, usuario que capturó, fecha de captura) del ERP. Esta es la contabilidad que hizo el sospechoso — la que vamos a contrastar con banco y SAT.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Depende del ERP. CONTPAQi/AdminPAQ: backup SQL → queries directas. SAP: exports ABAP. Aspel: DBFs con parseo especializado. ERPs cloud: API o CSV exports.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Requiere</span>
+      <span class="pb-value">Export completo del ERP incluyendo: pólizas, catálogo de cuentas, auxiliares, catálogo de proveedores/clientes, y si existe, log de auditoría (quién editó qué y cuándo).</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Riesgos</span>
+      <span class="pb-value">ERPs viejos o propietarios con formatos cerrados. Bases de datos corruptas. Falta de logs de auditoría (si el ERP no los tiene, perdemos trazabilidad de usuario).</span>
+    </div>
+    <div class="callout">
+      <p><strong>⚠️ Dependencia del ERP:</strong> La facilidad de extracción varía enormemente. CONTPAQi es el más común en México y tengo experiencia con su estructura SQL. Otros ERPs pueden requerir más tiempo de reverse-engineering.</p>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Modelo de datos canónico</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-easy">Alta factibilidad</span>
+        <span class="tag-pill tag-script">Script</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Normaliza las tres fuentes</strong> (SAT, banco, contabilidad) a un esquema unificado en DuckDB. Cada transacción tiene un identificador único y links de trazabilidad a la fuente original. Esto permite cruzar cualquier cosa contra cualquier cosa.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">DuckDB como motor analítico (columnar, rápido, sin servidor). Parquet para persistencia. Esquema canónico con tablas: transacciones, entidades, cuentas, relaciones, metadata.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Requiere</span>
+      <span class="pb-value">Que las 3 fuentes estén parseadas. El modelo se construye automáticamente.</span>
+    </div>
+    <div class="callout callout-green">
+      <p><strong>Factibilidad: ALTA.</strong> Es ingeniería de datos estándar. DuckDB maneja millones de registros sin problema. El esquema ya está diseñado.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FASE 3: RECONCILIACIÓN -->
+<section>
+  <span class="phase-label phase-2">Fase 3 · Semana 2</span>
+  <h2>Reconciliación Automática</h2>
+  <p class="lead" style="margin-bottom:32px;">Cruzar banco ↔ contabilidad ↔ facturación para encontrar todo lo que no cuadra.</p>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Banco ↔ Contabilidad</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-easy">Alta factibilidad</span>
+        <span class="tag-pill tag-auto">Automático</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Matching automático</strong> de cada movimiento bancario con su póliza contable correspondiente. Detecta: movimientos bancarios sin registro contable (pagos ocultos), registros contables sin movimiento bancario (asientos fantasma), diferencias de monto entre banco y contabilidad.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Algoritmo de matching por fecha + monto + referencia, con tolerancia configurable. Fuzzy matching para descripciones. Match score ponderado. Output: matched, unmatched_bank, unmatched_ledger, discrepancies.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Riesgos</span>
+      <span class="pb-value">Movimientos agrupados (batch de pagos) dificultan el matching 1:1. Diferencias de fecha por corte bancario. Se maneja con matching N:1 y ventanas de tolerancia.</span>
+    </div>
+    <div class="callout callout-green">
+      <p><strong>Factibilidad: ALTA.</strong> Reconciliación bancaria es el proceso más estándar en contabilidad. La diferencia es que aquí se hace automáticamente sobre el 100% — no muestreo.</p>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Facturación (CFDI) ↔ Contabilidad</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-easy">Alta factibilidad</span>
+        <span class="tag-pill tag-auto">Automático</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Cruza cada CFDI con su asiento contable.</strong> Detecta: facturas registradas en contabilidad que no existen en el SAT (facturas falsas), facturas del SAT no registradas (ingresos ocultos o gastos no deducidos), diferencias de monto entre factura y registro.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Matching por UUID del CFDI (cuando está registrado en la póliza), o por RFC + monto + fecha como fallback. El UUID es el link perfecto — si el ERP lo captura, el matching es 100% automático.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Riesgos</span>
+      <span class="pb-value">ERPs que no capturan UUID en la póliza (matching por aproximación). Notas de crédito y complementos de pago que complican la lógica. CFDIs cancelados que se dejaron registrados.</span>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Banco ↔ Facturación (CFDI)</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-medium">Media factibilidad</span>
+        <span class="tag-pill tag-auto">Automático</span>
+        <span class="tag-pill tag-ai">IA</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>El cruce más revelador:</strong> cada pago bancario debería tener una factura y viceversa. Detecta: pagos a proveedores sin factura (posible extracción), facturas sin pago (posible factura de favor), pagos duplicados por la misma factura.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Matching por RFC del proveedor/cliente + monto + ventana de fecha. IA para resolver ambigüedades (pagos parciales, pagos agrupados, notas de crédito aplicadas). Complementos de pago CFDI como puente.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Riesgos</span>
+      <span class="pb-value">Pagos en efectivo que no aparecen en banco. Proveedores que cobran desde cuentas de terceros. Pagos a nombre de personas físicas cuando la factura es de persona moral. Se documentan como "zonas grises" para investigación manual.</span>
+    </div>
+    <div class="callout">
+      <p><strong>⚠️ Este cruce es el que más hallazgos produce</strong> pero también el que tiene más ruido. Se requiere una fase de "triage" donde se clasifican las discrepancias por severidad antes de investigar. La IA ayuda a priorizar, el criterio humano decide qué investigar.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FASE 4: DETECCIÓN -->
+<section>
+  <span class="phase-label phase-2">Fase 4 · Semana 2–6</span>
+  <h2>Detección con IA</h2>
+  <p class="lead" style="margin-bottom:32px;">Donde la inteligencia artificial realmente agrega valor: análisis estadístico de anomalías, patrones de comportamiento, y mapeo de relaciones ocultas.</p>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Detección estadística de anomalías</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-easy">Alta factibilidad</span>
+        <span class="tag-pill tag-ai">IA/ML</span>
+        <span class="tag-pill tag-auto">Automático</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Analiza el 100% de transacciones buscando anomalías estadísticas:</strong> Ley de Benford (distribución de primeros dígitos — fraudes contables la violan sistemáticamente), montos justo bajo umbrales de autorización ($49,800 cuando el límite es $50,000), concentración de actividad en horarios inusuales, picos de volumen antes de cierres contables, patrones de redondeo artificial.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Isolation Forest, LOF (Local Outlier Factor), Z-score por cuenta/proveedor/periodo. Benford's Law test con chi-cuadrado. Scoring de anomalía por transacción con intervalo de confianza.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Requiere</span>
+      <span class="pb-value">Base de datos canónica construida en Fase 2. Idealmente un periodo "limpio" (pre-sospecha) para establecer baseline. Si no existe, se usan distribuciones esperadas teóricas.</span>
+    </div>
+    <div class="callout callout-green">
+      <p><strong>Factibilidad: ALTA.</strong> Estos son algoritmos bien establecidos en detección de fraude financiero. La Ley de Benford se usa como evidencia en juicios en EE.UU. y Europa. Los modelos de anomalías son estándar en ciencia de datos.</p>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Reglas forenses específicas</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-easy">Alta factibilidad</span>
+        <span class="tag-pill tag-script">Script</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Busca patrones específicos de fraude conocidos:</strong> proveedores con misma CLABE, mismo domicilio fiscal o mismo representante legal (empresas fachada); empleados fantasma en nómina; ajustes contables concentrados en un solo usuario; facturas duplicadas o con folios secuenciales de mismo proveedor; reversiones sospechosas antes de cierre.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Biblioteca de 30+ reglas SQL/Python parameterizadas. Cada regla genera alertas con evidencia trazable. Se priorizan según hipótesis del caso definidas en Fase 1.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Requiere</span>
+      <span class="pb-value">Datos parseados. Las reglas se ejecutan sobre el modelo canónico. Algunas requieren datos específicos (ej: regla de nómina requiere catálogo de empleados).</span>
+    </div>
+    <div class="callout callout-green">
+      <p><strong>Factibilidad: ALTA.</strong> Son queries deterministas — si el dato existe, la regla lo encuentra. No hay ambigüedad. Es la parte más confiable de toda la investigación.</p>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Análisis de grafos y relaciones ocultas</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-medium">Media factibilidad</span>
+        <span class="tag-pill tag-ai">IA</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Construye una red de relaciones</strong> entre todas las entidades del caso: proveedores, cuentas bancarias, personas físicas, domicilios, RFCs, representantes legales. Identifica clusters sospechosos — por ejemplo, 5 proveedores "diferentes" que comparten la misma CLABE o el mismo representante legal.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">NetworkX para construcción de grafos. Community detection (Louvain). Centralidad y bridging para identificar nodos puente. Visualización interactiva con D3.js o Pyvis.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Requiere</span>
+      <span class="pb-value">Catálogo de proveedores con datos fiscales completos (RFC, domicilio, representante, CLABE). Mientras más metadata, mejor el grafo.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Riesgos</span>
+      <span class="pb-value">Datos incompletos reducen la utilidad del grafo. Si solo hay RFC y nombre, las conexiones son limitadas. La calidad del análisis depende directamente de la calidad del catálogo de proveedores/clientes.</span>
+    </div>
+    <div class="callout">
+      <p><strong>⚠️ Poder variable:</strong> Con datos completos, el análisis de grafos es devastadoramente efectivo para desmantelar redes de empresas fachada. Con datos parciales, solo detecta las conexiones más obvias. Se documenta la cobertura real.</p>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Perfilamiento por usuario/persona</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-medium">Media factibilidad</span>
+        <span class="tag-pill tag-ai">IA</span>
+        <span class="tag-pill tag-script">Script</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Construye un perfil de comportamiento</strong> por cada persona involucrada: horarios de trabajo, volumen de operaciones, tipos de transacciones que maneja, proveedores que autoriza, cuentas que toca. Compara el perfil del sospechoso contra el de sus pares. Las desviaciones significativas son líneas de investigación.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Análisis de series temporales por usuario. Clustering de comportamiento. Detección de cambios de patrón (change-point detection). Heatmaps de actividad.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Requiere</span>
+      <span class="pb-value"><strong>Logs de auditoría del ERP</strong> con usuario y timestamp. Sin estos logs, el perfilamiento por persona no es posible — solo por entidad.</span>
+    </div>
+    <div class="callout callout-red">
+      <p><strong>⚠️ Dependencia crítica:</strong> Muchos ERPs en México NO tienen logs de auditoría habilitados, o el sospechoso los borró. Si no hay logs, este análisis se degrada a "perfilamiento por patrón de transacciones" sin atribución directa a una persona.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FASE 5: DOCUMENTACIÓN -->
+<section>
+  <span class="phase-label phase-3">Fase 5 · Semana 3–8</span>
+  <h2>Documentación y Expediente</h2>
+  <p class="lead" style="margin-bottom:32px;">Convertir los hallazgos en un expediente formal que sirva para decisiones internas, negociación, o procedimiento legal.</p>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Reporte ejecutivo</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-easy">Alta factibilidad</span>
+        <span class="tag-pill tag-ai">IA</span>
+        <span class="tag-pill tag-manual">Manual</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Documento para directivos</strong> sin jerga técnica: qué pasó, cuánto se perdió, quién lo hizo, qué evidencia hay, qué opciones tienen. Máximo 10 páginas. Con gráficas claras y cifras concretas.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">IA genera el primer borrador a partir de los hallazgos estructurados. Revisión y edición manual para asegurar precisión y tono. Visualizaciones generadas con Python (matplotlib/plotly).</span>
+    </div>
+    <div class="callout callout-green">
+      <p><strong>Factibilidad: ALTA.</strong> Es redacción + visualización. Lo más importante es que las cifras y conclusiones sean verificables contra la evidencia cruda.</p>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Expediente técnico completo</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-easy">Alta factibilidad</span>
+        <span class="tag-pill tag-script">Script</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Documentación exhaustiva:</strong> cada hallazgo con su evidencia trazable (links a la fuente original), metodología utilizada, scripts reproducibles, timeline de eventos, y cadena lógica del fraude. Diseñado para que un tercero (perito, auditor, abogado) pueda verificar independientemente cada conclusión.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">Generación automatizada desde la base de datos de hallazgos. Cada caso = un dossier con: evidencia, scripts, capturas, timeline. Todo versionado y con hashes para integridad.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Requiere</span>
+      <span class="pb-value">Que las fases anteriores estén completas. El expediente se construye incrementalmente conforme se confirman hallazgos.</span>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Cuantificación del daño</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-medium">Media factibilidad</span>
+        <span class="tag-pill tag-ai">IA</span>
+        <span class="tag-pill tag-manual">Manual</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Calcula el monto total del fraude</strong> con rangos de confianza. Clasifica por tipo de esquema (proveedor fachada, nómina fantasma, cobros indebidos, etc.). Método: suma directa de transacciones identificadas + estimación estadística para lo que no se puede confirmar al 100%.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Riesgos</span>
+      <span class="pb-value">El monto real siempre tiene un margen de incertidumbre. Lo que detectamos son las transacciones digitales — fraude en efectivo o acuerdos verbales no dejan huella en los datos. Se presenta como rango (conservador / estimado / máximo) con metodología transparente.</span>
+    </div>
+    <div class="callout">
+      <p><strong>⚠️ Honestidad en la cuantificación:</strong> Presentar un monto exacto sería irresponsable. Siempre se reportan 3 cifras: monto confirmado (evidencia directa), monto probable (patrones consistentes), y monto máximo posible (proyección estadística). El cliente y su abogado deciden cuál usar.</p>
+    </div>
+  </div>
+
+  <div class="process-block">
+    <div class="pb-header">
+      <span class="pb-title">Mapa de relaciones visual</span>
+      <div class="pb-tags">
+        <span class="tag-pill tag-easy">Alta factibilidad</span>
+        <span class="tag-pill tag-script">Script</span>
+      </div>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Qué hace</span>
+      <span class="pb-value"><strong>Visualización interactiva</strong> de la red de fraude: quién se conecta con quién, por qué vía (RFC, CLABE, domicilio, operaciones), y cuánto dinero fluyó entre ellos. Es lo que hace que el caso sea "entendible" para alguien no técnico — un abogado o un juez.</span>
+    </div>
+    <div class="pb-row">
+      <span class="pb-label">Tecnología</span>
+      <span class="pb-value">D3.js o Pyvis para grafo interactivo (HTML exportable). Versión estática en PDF para el expediente. Colores por tipo de relación, grosor de arista por volumen monetario.</span>
+    </div>
+    <div class="callout callout-green">
+      <p><strong>Factibilidad: ALTA.</strong> La visualización es la parte fácil — lo difícil es que haya datos suficientes para que el grafo sea revelador (depende de la Fase 4).</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING ACTUALIZADO -->
+<section>
+  <span class="tag">Inversión actualizada</span>
+  <h2>Paquetes con precios ajustados</h2>
+  <p class="lead" style="margin-bottom:32px;">Precios basados en la complejidad real del trabajo, no en cotización genérica.</p>
+
+  <div class="summary-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="summary-card" style="border-color: rgba(59,130,246,0.2);">
+      <h4>Diagnóstico Rápido</h4>
+      <div class="big" style="font-size:22px;">$350K–$600K</div>
+      <p style="margin-bottom:12px; color:var(--accent); font-family:'IBM Plex Mono',monospace; font-size:11px;">MXN · 2–3 semanas</p>
+      <p>Preservación + reconstrucción + reconciliación + primeros hallazgos. Reporte ejecutivo con top 10 anomalías y estimación preliminar de daño.</p>
+    </div>
+    <div class="summary-card" style="border-color: rgba(168,85,247,0.3); background: rgba(168,85,247,0.04);">
+      <h4>Investigación Profunda</h4>
+      <div class="big" style="font-size:22px;">$1.2M–$3M</div>
+      <p style="margin-bottom:12px; color:var(--purple); font-family:'IBM Plex Mono',monospace; font-size:11px;">MXN · 4–8 semanas</p>
+      <p>Todo lo anterior + análisis de grafos, perfilamiento, reglas forenses completas, cuantificación formal, expediente técnico con dossier por caso.</p>
+    </div>
+    <div class="summary-card" style="border-color: rgba(248,113,113,0.2);">
+      <h4>Soporte Legal</h4>
+      <div class="big" style="font-size:22px;">$200K–$450K</div>
+      <p style="margin-bottom:12px; color:var(--red); font-family:'IBM Plex Mono',monospace; font-size:11px;">MXN/mes · Retainer</p>
+      <p>Acompañamiento para procedimiento legal: preparación para perito, soporte ante abogados, ampliaciones, aclaraciones, coordinación con autoridades.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <p><strong>¿Por qué estos precios?</strong> Un fraude contable interno típico en México involucra montos de $5M–$50M+ MXN. El diagnóstico rápido de $350K–$600K es ~1% del daño promedio detectado. La investigación profunda de $1.2M–$3M se justifica cuando hay proceso legal — el expediente reduce meses de trabajo de perito y abogado. El ROI es claro.</p>
+  </div>
+
+  <p class="disclaimer">Precios según volumen de transacciones, número de entidades y años bajo revisión. IVA no incluido. No incluye honorarios de perito externo ni asesoría legal. Cotización formal después de reunión de scoping.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- LIMITACIONES -->
+<section>
+  <span class="tag">Transparencia</span>
+  <h2>Lo que NO puede hacer este análisis</h2>
+  <p class="lead" style="margin-bottom:32px;">Prefiero decirte las limitaciones ahora que descubrirlas a medio proyecto.</p>
+
+  <div class="process-block" style="border-left: 3px solid var(--red);">
+    <div class="pb-row">
+      <span class="pb-label">Efectivo</span>
+      <span class="pb-value"><strong>Fraude en efectivo no deja huella digital.</strong> Si alguien cobró sobornos en efectivo, no aparece en los datos. Solo puedo detectar las anomalías indirectas (ej: faltantes de caja, diferencias inventario-venta).</span>
+    </div>
+  </div>
+  <div class="process-block" style="border-left: 3px solid var(--red);">
+    <div class="pb-row">
+      <span class="pb-label">Confabulación</span>
+      <span class="pb-value"><strong>Si múltiples personas cooperaron activamente en cubrir el fraude,</strong> las anomalías son más sutiles. El análisis sigue funcionando, pero la atribución a una persona específica se complica.</span>
+    </div>
+  </div>
+  <div class="process-block" style="border-left: 3px solid var(--red);">
+    <div class="pb-row">
+      <span class="pb-label">Datos borrados</span>
+      <span class="pb-value"><strong>Si se borraron registros del ERP sin backup,</strong> esos registros ya no existen. El análisis detecta huecos (periodos sin actividad, secuencias rotas de folios), pero no puede reconstruir lo borrado.</span>
+    </div>
+  </div>
+  <div class="process-block" style="border-left: 3px solid var(--red);">
+    <div class="pb-row">
+      <span class="pb-label">Dictamen</span>
+      <span class="pb-value"><strong>No es un dictamen pericial.</strong> No soy perito autorizado. El expediente técnico es insumo para un perito — él valida, firma, y presenta ante autoridad. Esto es por diseño: la tecnología hace el trabajo pesado, el perito aporta la credencial legal.</span>
+    </div>
+  </div>
+
+  <div class="callout callout-green" style="margin-top:20px;">
+    <p><strong>Lo que SÍ garantizo:</strong> si el fraude dejó huella en los datos digitales (bancarios, contables, fiscales), el análisis lo va a encontrar. La IA no se cansa, no olvida revisar una cuenta, y no le da flojera cruzar 50,000 transacciones. Ese es el valor real.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<section style="text-align:center; padding-bottom:120px;">
+  <span class="tag">Contacto</span>
+  <h2>¿Procedemos?</h2>
+  <p class="lead" style="margin:0 auto 24px;">El primer paso es una conversación para entender el caso y confirmar qué datos están disponibles.</p>
+  <p style="font-size:18px; color:var(--white); margin-bottom:6px;">Raul Zhou</p>
+  <p style="font-size:15px; color:var(--gray); margin-bottom:24px;">raul.chio.leon@gmail.com</p>
+  <a href="./index.html" class="back-link">← Volver a la propuesta principal</a>
+
+  <p class="disclaimer" style="margin-top:48px;">NATURALEZA DE LOS SERVICIOS — Los servicios descritos consisten exclusivamente en análisis técnico de datos mediante herramientas de inteligencia artificial y ciencia de datos. No constituyen auditoría contable, dictamen pericial, ni opinión fiscal. Los hallazgos técnicos deben ser interpretados y validados por el profesional contable responsable del caso antes de cualquier uso ante autoridades judiciales, fiscales o administrativas.</p>
+</section>
+
+</body>
+</html>
