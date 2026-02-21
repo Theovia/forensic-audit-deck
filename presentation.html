@@ -3,996 +3,1029 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Análisis Forense de Datos con IA</title>
+<title>Análisis Forense de Datos con IA — Raul Zhou</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;700&family=Young+Serif&display=swap');
+  :root {
+    --bg: #050508;
+    --bg2: #0a0a10;
+    --surface: #10101a;
+    --border: rgba(255,255,255,0.06);
+    --border-accent: rgba(99,140,255,0.15);
+    --white: #f0f0f5;
+    --gray: #8b8b9e;
+    --muted: #55556a;
+    --accent: #638cff;
+    --accent-dim: rgba(99,140,255,0.1);
+    --accent-glow: rgba(99,140,255,0.25);
+    --green: #34d399;
+    --red: #f87171;
+    --amber: #fbbf24;
+  }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  :root {
-    --navy: #0a1628;
-    --dark: #111827;
-    --slate: #1e293b;
-    --mid: #334155;
-    --accent: #3b82f6;
-    --accent2: #60a5fa;
-    --accent-glow: #2563eb;
-    --white: #f8fafc;
-    --gray: #94a3b8;
-    --red: #ef4444;
-    --green: #22c55e;
-    --amber: #f59e0b;
-  }
+
+  html { scroll-behavior: smooth; }
 
   body {
-    background: var(--navy);
+    background: var(--bg);
     color: var(--white);
-    font-family: 'Work Sans', system-ui, sans-serif;
-    overflow: hidden;
-    width: 100vw;
-    height: 100vh;
-  }
-
-  .deck { width: 100%; height: 100%; position: relative; }
-
-  .slide {
-    position: absolute;
-    inset: 0;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    padding: 80px 100px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-  .slide.active { display: flex; opacity: 1; }
-
-  /* SLIDE 1 — COVER */
-  .slide-cover {
-    background: linear-gradient(135deg, #0a1628 0%, #1a1a2e 40%, #0f172a 100%);
-    position: relative;
-    overflow: hidden;
-  }
-  .slide-cover::before {
-    content: '';
-    position: absolute;
-    top: -200px; right: -200px;
-    width: 800px; height: 800px;
-    background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .slide-cover::after {
-    content: '';
-    position: absolute;
-    bottom: -100px; left: -100px;
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .cover-tag {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    color: var(--accent);
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    margin-bottom: 32px;
-  }
-  .cover-title {
-    font-family: 'Young Serif', serif;
-    font-size: 72px;
-    line-height: 1.05;
-    color: var(--white);
-    margin-bottom: 24px;
-    max-width: 800px;
-  }
-  .cover-subtitle {
-    font-size: 22px;
-    color: var(--gray);
-    max-width: 600px;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     line-height: 1.6;
-    margin-bottom: 60px;
-  }
-  .cover-meta {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--mid);
-    letter-spacing: 2px;
-  }
-  .cover-line {
-    width: 60px;
-    height: 3px;
-    background: var(--accent);
-    margin-bottom: 40px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
-  /* SLIDE COMMON */
-  .slide-tag {
-    font-family: 'IBM Plex Mono', monospace;
+  /* ═══ NAV ═══ */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(5,5,8,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-brand {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .nav-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* ═══ SECTIONS ═══ */
+  section {
+    padding: 100px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+  section:first-of-type { padding-top: 140px; }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ═══ TYPOGRAPHY ═══ */
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
     color: var(--accent);
     letter-spacing: 3px;
     text-transform: uppercase;
     margin-bottom: 16px;
+    display: block;
   }
-  .slide-title {
-    font-family: 'Young Serif', serif;
-    font-size: 44px;
-    line-height: 1.15;
-    margin-bottom: 40px;
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 7vw, 64px);
+    font-weight: 900;
+    line-height: 1.05;
     color: var(--white);
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
   }
-  .slide-body {
-    font-size: 18px;
-    line-height: 1.8;
-    color: var(--gray);
-    max-width: 900px;
-  }
-
-  /* GRID LAYOUTS */
-  .grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    margin-top: 20px;
-  }
-  .grid-2 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
-    margin-top: 20px;
-  }
-
-  .card {
-    background: rgba(30, 41, 59, 0.5);
-    border: 1px solid rgba(59, 130, 246, 0.1);
-    border-radius: 16px;
-    padding: 36px 32px;
-    position: relative;
-    transition: border-color 0.3s;
-  }
-  .card:hover { border-color: rgba(59, 130, 246, 0.3); }
-  .card-number {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 48px;
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 42px);
     font-weight: 700;
-    color: rgba(59, 130, 246, 0.15);
-    position: absolute;
-    top: 20px;
-    right: 24px;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
   }
-  .card-title {
-    font-family: 'Young Serif', serif;
-    font-size: 22px;
+  h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
     color: var(--white);
     margin-bottom: 12px;
   }
-  .card-body {
-    font-size: 15px;
+  .lead {
+    font-size: clamp(16px, 2.2vw, 20px);
+    color: var(--gray);
     line-height: 1.7;
-    color: var(--gray);
+    max-width: 650px;
   }
-  .card-detail {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--accent2);
-    margin-top: 16px;
-  }
-
-  /* STATS */
-  .stat-row {
-    display: flex;
-    gap: 60px;
-    margin: 40px 0;
-  }
-  .stat-item {}
-  .stat-number {
-    font-family: 'Young Serif', serif;
-    font-size: 56px;
-    color: var(--accent);
-    line-height: 1;
-  }
-  .stat-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--gray);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-top: 8px;
-  }
-
-  /* TABLE */
-  .clean-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 24px;
-  }
-  .clean-table th {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-align: left;
-    padding: 12px 20px;
-    border-bottom: 1px solid var(--mid);
-  }
-  .clean-table td {
+  .body-text {
     font-size: 15px;
-    color: var(--gray);
-    padding: 16px 20px;
-    border-bottom: 1px solid rgba(51, 65, 85, 0.3);
-  }
-  .clean-table td:first-child { color: var(--white); font-weight: 600; }
-
-  /* PROCESS FLOW */
-  .flow {
-    display: flex;
-    align-items: stretch;
-    gap: 20px;
-    margin-top: 30px;
-  }
-  .flow-step {
-    flex: 1;
-    background: rgba(30, 41, 59, 0.4);
-    border: 1px solid rgba(59, 130, 246, 0.08);
-    border-radius: 12px;
-    padding: 28px 24px;
-    position: relative;
-  }
-  .flow-step::after {
-    content: '→';
-    position: absolute;
-    right: -16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--mid);
-    font-size: 20px;
-  }
-  .flow-step:last-child::after { display: none; }
-  .flow-num {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-  }
-  .flow-label {
-    font-family: 'Young Serif', serif;
-    font-size: 17px;
-    color: var(--white);
-    margin-bottom: 8px;
-  }
-  .flow-desc {
-    font-size: 13px;
-    color: var(--gray);
-    line-height: 1.6;
-  }
-
-  /* HIGHLIGHT BOX */
-  .highlight-box {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.03));
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 16px;
-    padding: 36px 40px;
-    margin-top: 32px;
-  }
-  .highlight-box .hb-title {
-    font-family: 'Young Serif', serif;
-    font-size: 20px;
-    color: var(--accent2);
-    margin-bottom: 12px;
-  }
-  .highlight-box .hb-body {
-    font-size: 16px;
     color: var(--gray);
     line-height: 1.7;
   }
+  strong { color: var(--white); font-weight: 600; }
 
-  /* BULLET LIST */
-  .clean-list {
-    list-style: none;
-    padding: 0;
-  }
-  .clean-list li {
-    font-size: 17px;
-    color: var(--gray);
-    padding: 10px 0;
-    padding-left: 24px;
+  /* ═══ HERO ═══ */
+  .hero {
+    padding: 160px 24px 120px;
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     position: relative;
-    line-height: 1.6;
+    overflow: hidden;
   }
-  .clean-list li::before {
+  .hero::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 18px;
-    width: 8px;
-    height: 8px;
-    background: var(--accent);
-    border-radius: 2px;
-  }
-
-  /* NAVIGATION */
-  .nav {
-    position: fixed;
-    bottom: 32px;
-    right: 40px;
-    display: flex;
-    gap: 12px;
-    z-index: 100;
-  }
-  .nav button {
-    width: 48px; height: 48px;
+    top: -40%;
+    right: -20%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(99,140,255,0.06) 0%, transparent 65%);
     border-radius: 50%;
-    border: 1px solid var(--mid);
-    background: rgba(30, 41, 59, 0.8);
-    color: var(--white);
-    font-size: 18px;
-    cursor: pointer;
-    backdrop-filter: blur(8px);
-    transition: all 0.2s;
+    pointer-events: none;
   }
-  .nav button:hover { border-color: var(--accent); background: rgba(59,130,246,0.1); }
-
-  .slide-counter {
-    position: fixed;
-    bottom: 40px;
-    left: 40px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--mid);
+  .hero .tag { margin-bottom: 20px; }
+  .hero-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
     letter-spacing: 2px;
-    z-index: 100;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: inline-block;
+  }
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    animation: pulse-down 2s ease-in-out infinite;
+  }
+  .scroll-hint .arrow {
+    width: 1px;
+    height: 24px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  @keyframes pulse-down {
+    0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+    50% { opacity: 1; transform: translateX(-50%) translateY(4px); }
   }
 
-  /* COMPARISON COLS */
-  .compare-cols {
+  /* ═══ STATS ═══ */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 32px 0;
+  }
+  .stat {
+    background: var(--surface);
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--gray);
+    letter-spacing: 1px;
+    line-height: 1.4;
+  }
+
+  /* ═══ CARDS ═══ */
+  .card-grid {
+    display: grid;
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .card-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 24px;
+    transition: border-color 0.3s ease;
+  }
+  .card:hover { border-color: var(--border-accent); }
+  .card-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .card h3 { font-size: 17px; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--gray); line-height: 1.6; }
+  .card-detail {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 14px;
+    opacity: 0.7;
+  }
+
+  /* ═══ COMPARE ═══ */
+  .compare {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin-top: 24px;
+    gap: 16px;
+    margin-top: 28px;
   }
   .compare-col {
-    border-radius: 16px;
-    padding: 32px;
+    border-radius: 14px;
+    padding: 28px 24px;
   }
   .compare-col.bad {
-    background: rgba(239, 68, 68, 0.06);
-    border: 1px solid rgba(239, 68, 68, 0.15);
+    background: rgba(248,113,113,0.04);
+    border: 1px solid rgba(248,113,113,0.1);
   }
   .compare-col.good {
-    background: rgba(34, 197, 94, 0.06);
-    border: 1px solid rgba(34, 197, 94, 0.15);
+    background: rgba(52,211,153,0.04);
+    border: 1px solid rgba(52,211,153,0.1);
   }
   .compare-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
     letter-spacing: 2px;
     text-transform: uppercase;
     margin-bottom: 16px;
+    display: block;
   }
   .compare-col.bad .compare-label { color: var(--red); }
   .compare-col.good .compare-label { color: var(--green); }
   .compare-item {
-    font-size: 15px;
+    font-size: 14px;
     color: var(--gray);
-    padding: 8px 0;
+    padding: 7px 0;
     line-height: 1.5;
   }
 
-  /* PRICE CARDS */
-  .price-cards {
+  /* ═══ FLOW ═══ */
+  .flow-list {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .flow-item {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 80px 1fr;
     gap: 24px;
-    margin-top: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
   }
-  .price-card {
-    background: rgba(30, 41, 59, 0.4);
-    border: 1px solid rgba(59, 130, 246, 0.1);
-    border-radius: 16px;
-    padding: 32px 28px;
-    text-align: center;
-  }
-  .price-card.featured {
-    border-color: rgba(59, 130, 246, 0.4);
-    background: rgba(59, 130, 246, 0.06);
-  }
-  .price-card-tag {
-    font-family: 'IBM Plex Mono', monospace;
+  .flow-item:last-child { border-bottom: none; }
+  .flow-num {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--accent);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
+    letter-spacing: 2px;
+    padding-top: 2px;
   }
-  .price-card-name {
-    font-family: 'Young Serif', serif;
-    font-size: 24px;
+  .flow-title {
+    font-weight: 700;
     color: var(--white);
-    margin-bottom: 8px;
-  }
-  .price-card-time {
-    font-size: 13px;
-    color: var(--gray);
-    margin-bottom: 20px;
-  }
-  .price-card-price {
-    font-family: 'Young Serif', serif;
-    font-size: 32px;
-    color: var(--accent);
+    font-size: 16px;
     margin-bottom: 4px;
   }
-  .price-card-unit {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
+  .flow-desc {
+    font-size: 14px;
     color: var(--gray);
-    margin-bottom: 20px;
+    line-height: 1.6;
   }
-  .price-card-list {
+
+  /* ═══ CHECKLIST ═══ */
+  .check-list {
     list-style: none;
     padding: 0;
-    text-align: left;
   }
-  .price-card-list li {
-    font-size: 13px;
+  .check-list li {
+    font-size: 15px;
     color: var(--gray);
-    padding: 6px 0;
-    padding-left: 20px;
+    padding: 8px 0 8px 24px;
     position: relative;
     line-height: 1.5;
   }
-  .price-card-list li::before {
+  .check-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 1px;
+  }
+
+  /* ═══ CALLOUT ═══ */
+  .callout {
+    background: var(--accent-dim);
+    border: 1px solid var(--border-accent);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-top: 28px;
+  }
+  .callout-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .callout p {
+    font-size: 14px;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  /* ═══ PRICING ═══ */
+  .pricing {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .price-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px 24px;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .price-card.featured {
+    border-color: var(--border-accent);
+    background: linear-gradient(180deg, rgba(99,140,255,0.04) 0%, var(--surface) 100%);
+  }
+  .price-card.featured::before {
+    content: 'Recomendado';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+  .price-phase {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .price-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .price-time {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .price-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .price-unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .price-list {
+    list-style: none;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .price-list li {
+    font-size: 13px;
+    color: var(--gray);
+    padding: 5px 0 5px 20px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .price-list li::before {
     content: '✓';
     position: absolute;
     left: 0;
     color: var(--green);
-    font-size: 12px;
+    font-size: 11px;
   }
 
-  /* TIMELINE */
+  /* ═══ TIMELINE ═══ */
   .timeline {
     margin-top: 32px;
     position: relative;
-    padding-left: 40px;
+    padding-left: 32px;
   }
   .timeline::before {
     content: '';
     position: absolute;
-    left: 12px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(to bottom, var(--accent), transparent);
+    left: 6px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), var(--border));
   }
   .tl-item {
     position: relative;
-    margin-bottom: 28px;
+    padding-bottom: 28px;
   }
+  .tl-item:last-child { padding-bottom: 0; }
   .tl-item::before {
     content: '';
     position: absolute;
-    left: -34px;
+    left: -30px;
     top: 6px;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     background: var(--accent);
     border-radius: 50%;
-    border: 2px solid var(--navy);
+    box-shadow: 0 0 12px var(--accent-glow);
   }
   .tl-week {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
     color: var(--accent);
     letter-spacing: 2px;
     margin-bottom: 4px;
   }
   .tl-title {
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 700;
     color: var(--white);
-    font-weight: 600;
     margin-bottom: 4px;
   }
   .tl-desc {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--gray);
     line-height: 1.5;
   }
 
-  /* MOBILE RESPONSIVE */
-  @media (max-width: 768px) {
-    body { overflow: visible; height: auto; }
-    .deck { height: auto; }
-
-    .slide {
-      padding: 20px 16px 80px;
-      justify-content: flex-start;
-      padding-top: 32px;
-      overflow-y: auto;
-      position: relative;
-      min-height: 100vh;
-      height: auto;
-    }
-    .slide:not(.active) { display: none; }
-
-    .cover-title { font-size: 28px; line-height: 1.15; }
-    .cover-subtitle { font-size: 14px; margin-bottom: 24px; line-height: 1.5; max-width: 100%; }
-    .cover-tag { font-size: 10px; letter-spacing: 2px; margin-bottom: 16px; }
-    .cover-line { margin-bottom: 16px; }
-    .cover-meta { font-size: 10px; }
-
-    .slide-title { font-size: 22px; margin-bottom: 16px; line-height: 1.2; }
-    .slide-tag { font-size: 9px; margin-bottom: 8px; }
-    .slide-body { font-size: 14px; line-height: 1.5; }
-
-    .grid-3, .grid-2, .compare-cols, .price-cards {
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-    .stat-row {
-      flex-wrap: wrap;
-      gap: 16px;
-      margin: 16px 0;
-    }
-    .stat-item { flex: 1 1 40%; }
-    .stat-number { font-size: 32px; }
-    .stat-label { font-size: 10px; letter-spacing: 1px; }
-
-    .flow {
-      flex-direction: column;
-      gap: 8px;
-    }
-    .flow-step::after { display: none; }
-    .flow-step { padding: 14px 12px; }
-    .flow-num { font-size: 9px; margin-bottom: 4px; }
-    .flow-label { font-size: 14px; margin-bottom: 4px; }
-    .flow-desc { font-size: 11px; }
-
-    .card { padding: 18px 14px; }
-    .card-number { font-size: 28px; top: 12px; right: 14px; }
-    .card-title { font-size: 16px; margin-bottom: 8px; }
-    .card-body { font-size: 12px; }
-
-    .highlight-box { padding: 14px 16px; margin-top: 14px; }
-    .highlight-box .hb-title { font-size: 15px; margin-bottom: 8px; }
-    .highlight-box .hb-body { font-size: 12px; line-height: 1.5; }
-
-    .clean-list li { font-size: 13px; padding: 6px 0 6px 18px; line-height: 1.4; }
-    .clean-list li::before { top: 12px; width: 5px; height: 5px; }
-
-    .clean-table th { font-size: 9px; padding: 6px 8px; }
-    .clean-table td { font-size: 12px; padding: 8px; }
-
-    .compare-col { padding: 18px 14px; }
-    .compare-label { font-size: 10px; margin-bottom: 10px; }
-    .compare-item { font-size: 13px; padding: 5px 0; }
-
-    .price-card { padding: 20px 16px; text-align: left; }
-    .price-card-name { font-size: 18px; }
-    .price-card-price { font-size: 22px; }
-    .price-card-time { font-size: 12px; }
-    .price-card-unit { font-size: 10px; }
-    .price-card-list li { font-size: 12px; }
-
-    .timeline { padding-left: 24px; margin-top: 16px; }
-    .tl-item { margin-bottom: 18px; }
-    .tl-item::before { left: -18px; width: 8px; height: 8px; }
-    .timeline::before { left: 6px; }
-    .tl-week { font-size: 9px; }
-    .tl-title { font-size: 14px; }
-    .tl-desc { font-size: 12px; }
-
-    .nav { bottom: 12px; right: 12px; gap: 8px; }
-    .nav button { width: 36px; height: 36px; font-size: 14px; }
-    .slide-counter { bottom: 18px; left: 16px; font-size: 10px; }
-
-    .slide-cover { padding: 32px 16px; }
-
-    h3[style] { font-size: 18px !important; margin-bottom: 12px !important; }
+  /* ═══ CTA ═══ */
+  .cta-section {
+    text-align: center;
+    padding: 120px 24px;
+  }
+  .cta-section h2 {
+    max-width: 600px;
+    margin: 0 auto 16px;
+  }
+  .cta-section .lead {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .cta-contact {
+    margin-top: 48px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+  .cta-contact span {
+    display: block;
+    color: var(--white);
+    font-size: 16px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .cta-contact a {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
   }
 
-  /* Touch swipe support */
-  @media (hover: none) {
-    .card:hover { border-color: rgba(59, 130, 246, 0.1); }
+  /* ═══ FOOTER ═══ */
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* ═══ FADE IN ═══ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media (max-width: 768px) {
+    section { padding: 64px 20px; }
+    section:first-of-type { padding-top: 100px; }
+    .hero { padding: 120px 20px 80px; min-height: 80vh; }
+
+    .stats { grid-template-columns: 1fr; }
+    .stat { padding: 20px 16px; }
+    .stat-num { font-size: 32px; }
+
+    .card-grid.cols-2,
+    .card-grid.cols-3,
+    .compare,
+    .pricing { grid-template-columns: 1fr; }
+
+    .flow-item {
+      grid-template-columns: 60px 1fr;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .callout { padding: 18px 20px; }
+    .price-card { padding: 24px 20px; }
+
+    nav { padding: 12px 16px; }
+    .scroll-hint { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 32px; }
+    h2 { font-size: 26px; }
+    .stats { grid-template-columns: 1fr 1fr; gap: 1px; }
+    .stat { padding: 16px 12px; }
+    .stat-num { font-size: 28px; }
+    .stat-label { font-size: 9px; }
+    .flow-item { grid-template-columns: 1fr; gap: 4px; }
+    .flow-num { margin-bottom: 0; }
   }
 </style>
 </head>
 <body>
 
-<div class="deck">
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Raul Zhou</div>
+  <div class="nav-tag">Propuesta Confidencial · 2025</div>
+</nav>
 
-  <!-- SLIDE 1: COVER -->
-  <div class="slide slide-cover active" data-slide="1">
-    <div class="cover-tag">Propuesta de servicios</div>
-    <div class="cover-line"></div>
-    <h1 class="cover-title">Análisis Forense<br>de Datos con IA</h1>
-    <p class="cover-subtitle">Reconstrucción contable desde fuentes primarias, detección de patrones de fraude y cuantificación de daño económico.</p>
-    <p class="cover-meta">CONFIDENCIAL · RAUL ZHOU · 2025</p>
+<!-- HERO -->
+<section class="hero">
+  <span class="tag">Propuesta de Servicios</span>
+  <h1>Análisis Forense<br>de Datos con IA</h1>
+  <p class="lead">Reconstrucción contable desde fuentes primarias, detección de patrones de fraude y cuantificación de daño económico.</p>
+  <div class="hero-meta">CONFIDENCIAL · RAUL ZHOU · 2025</div>
+  <div class="scroll-hint">
+    <div class="arrow"></div>
+    SCROLL
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- QUIÉN SOY -->
+<section>
+  <div class="reveal">
+    <span class="tag">Quién soy</span>
+    <h2>Raul Zhou</h2>
+    <p class="body-text" style="margin-bottom:28px;">Consultor de tecnología especializado en inteligencia artificial y análisis de datos. Ingeniero en Biotecnología con Maestría en IA por el Tec de Monterrey.</p>
   </div>
 
-  <!-- SLIDE 2: QUIÉN SOY -->
-  <div class="slide" data-slide="2" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
-    <div class="slide-tag">Quién soy</div>
-    <h2 class="slide-title">Raul Zhou</h2>
-    <p class="slide-body" style="margin-bottom:32px;">Consultor de tecnología especializado en inteligencia artificial y análisis de datos. Ingeniero en Biotecnología con Maestría en IA por el Tec de Monterrey.</p>
+  <div class="compare reveal">
+    <div class="compare-col good" style="background:var(--accent-dim); border-color:var(--border-accent);">
+      <span class="compare-label" style="color:var(--accent);">Lo que yo pongo</span>
+      <div class="compare-item">Pipelines de datos: ingesta, limpieza, reconciliación automatizada</div>
+      <div class="compare-item">Modelos de detección de anomalías y análisis estadístico</div>
+      <div class="compare-item">Análisis de grafos para mapear relaciones ocultas</div>
+      <div class="compare-item">Automatización de procesos con IA</div>
+      <div class="compare-item">Reportes técnicos con evidencia trazable</div>
+    </div>
+    <div class="compare-col good" style="background:rgba(251,191,36,0.04); border-color:rgba(251,191,36,0.1);">
+      <span class="compare-label" style="color:var(--amber);">La alianza</span>
+      <div class="compare-item"><strong>Yo pongo:</strong> tecnología, análisis, IA, velocidad</div>
+      <div class="compare-item"><strong>Tú pones:</strong> conocimiento contable, criterio fiscal, validación</div>
+      <div class="compare-item"><strong>Si se necesita:</strong> perito certificado para dictamen legal</div>
+    </div>
+  </div>
 
-    <div class="grid-2">
+  <div class="callout reveal">
+    <p>No soy contador ni auditor. Soy el lado tech que hace en días lo que manualmente toma meses — y tú validas que los hallazgos tengan sentido contable.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EL PROBLEMA -->
+<section>
+  <div class="reveal">
+    <span class="tag">El problema</span>
+    <h2>El fraude contable interno es invisible hasta que es enorme</h2>
+  </div>
+
+  <div class="stats reveal">
+    <div class="stat">
+      <div class="stat-num">5%</div>
+      <div class="stat-label">De ingresos anuales<br>se pierden por fraude</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">18</div>
+      <div class="stat-label">Meses promedio<br>antes de detección</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">85%</div>
+      <div class="stat-label">De fraudes los cometen<br>empleados internos</div>
+    </div>
+  </div>
+
+  <div class="callout reveal">
+    <div class="callout-title">¿Por qué es tan difícil detectarlo?</div>
+    <p>Cuando la persona que comete el fraude es quien lleva la contabilidad, tiene acceso directo a los registros, conoce los controles, y puede cubrir sus huellas dentro del mismo sistema. Una auditoría tradicional revisa lo que ella misma registró.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LA SOLUCIÓN -->
+<section>
+  <div class="reveal">
+    <span class="tag">La solución</span>
+    <h2>Reconstruir la verdad desde las fuentes originales</h2>
+    <p class="body-text" style="margin-bottom:28px;">No revisamos la contabilidad existente — la <strong>reconstruimos desde cero</strong> usando bancos, facturación electrónica (CFDI), y documentos soporte. Después cruzamos todo con inteligencia artificial para encontrar lo que no cuadra.</p>
+  </div>
+
+  <div class="compare reveal">
+    <div class="compare-col bad">
+      <span class="compare-label">❌ Auditoría tradicional</span>
+      <div class="compare-item">Revisa la contabilidad que hizo el sospechoso</div>
+      <div class="compare-item">Muestreo manual (5-10% de transacciones)</div>
+      <div class="compare-item">Semanas o meses de trabajo manual</div>
+      <div class="compare-item">Depende de la experiencia del auditor</div>
+    </div>
+    <div class="compare-col good">
+      <span class="compare-label">✓ Análisis forense con IA</span>
+      <div class="compare-item">Reconstruye desde fuentes primarias independientes</div>
+      <div class="compare-item">Análisis del 100% de transacciones</div>
+      <div class="compare-item">Primeros patrones en días, diagnóstico en 2-3 semanas</div>
+      <div class="compare-item">Detección estadística + análisis de relaciones</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CÓMO FUNCIONA -->
+<section>
+  <div class="reveal">
+    <span class="tag">Metodología</span>
+    <h2>Cómo funciona</h2>
+  </div>
+
+  <div class="flow-list reveal">
+    <div class="flow-item">
+      <div class="flow-num">PASO 01</div>
       <div>
-        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Lo que hago</h3>
-        <ul class="clean-list">
-          <li>Pipelines de datos: ingesta, limpieza, reconciliación automatizada</li>
-          <li>Modelos de detección de anomalías y análisis estadístico</li>
-          <li>Análisis de grafos para mapear relaciones ocultas</li>
-          <li>Automatización de procesos con IA</li>
-          <li>Reportes técnicos con evidencia trazable</li>
-        </ul>
-      </div>
-      <div>
-        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Cómo funciona la alianza</h3>
-        <ul class="clean-list">
-          <li><strong style="color:var(--white)">Yo pongo:</strong> tecnología, análisis de datos, IA, velocidad</li>
-          <li><strong style="color:var(--white)">Tú pones:</strong> conocimiento contable, criterio fiscal, validación</li>
-          <li><strong style="color:var(--white)">Si se necesita:</strong> perito certificado para dictamen legal</li>
-        </ul>
-        <div class="highlight-box" style="margin-top:20px; padding:20px 24px;">
-          <div class="hb-body" style="font-size:14px;">No soy contador ni auditor. Soy el lado tech que hace en días lo que manualmente toma meses — y tú validas que los hallazgos tengan sentido contable.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDE 3: EL PROBLEMA -->
-  <div class="slide" data-slide="3" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
-    <div class="slide-tag">El problema</div>
-    <h2 class="slide-title">El fraude contable interno<br>es invisible hasta que es enorme</h2>
-    
-    <div class="stat-row">
-      <div class="stat-item">
-        <div class="stat-number">5%</div>
-        <div class="stat-label">De los ingresos anuales<br>se pierden por fraude (ACFE)</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">18</div>
-        <div class="stat-label">Meses promedio antes<br>de detección</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">85%</div>
-        <div class="stat-label">De los fraudes son<br>cometidos por empleados</div>
-      </div>
-    </div>
-
-    <div class="highlight-box">
-      <div class="hb-title">¿Por qué es tan difícil detectarlo?</div>
-      <div class="hb-body">Cuando la persona que comete el fraude es quien lleva la contabilidad, tiene acceso directo a los registros, conoce los controles, y puede cubrir sus huellas dentro del mismo sistema. Una auditoría tradicional revisa lo que ella misma registró.</div>
-    </div>
-  </div>
-
-  <!-- SLIDE 4: LA SOLUCIÓN -->
-  <div class="slide" data-slide="4" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
-    <div class="slide-tag">La solución</div>
-    <h2 class="slide-title">Reconstruir la verdad<br>desde las fuentes originales</h2>
-    <p class="slide-body" style="margin-bottom: 32px;">No revisamos la contabilidad existente — la <strong style="color:var(--white)">reconstruimos desde cero</strong> usando bancos, facturación electrónica (CFDI), y documentos soporte. Después cruzamos todo con inteligencia artificial para encontrar lo que no cuadra.</p>
-    
-    <div class="compare-cols">
-      <div class="compare-col bad">
-        <div class="compare-label">❌ Auditoría tradicional</div>
-        <div class="compare-item">Revisa la contabilidad que hizo el sospechoso</div>
-        <div class="compare-item">Muestreo manual (5-10% de transacciones)</div>
-        <div class="compare-item">Semanas o meses de trabajo manual</div>
-        <div class="compare-item">Depende de la experiencia del auditor</div>
-      </div>
-      <div class="compare-col good">
-        <div class="compare-label">✓ Análisis forense con IA</div>
-        <div class="compare-item">Reconstruye desde fuentes primarias independientes</div>
-        <div class="compare-item">Análisis del 100% de transacciones</div>
-        <div class="compare-item">Primeros patrones en días, diagnóstico en 2-3 semanas</div>
-        <div class="compare-item">Detección de anomalías estadísticas + análisis de relaciones</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDE 5: CÓMO FUNCIONA -->
-  <div class="slide" data-slide="5" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
-    <div class="slide-tag">Metodología</div>
-    <h2 class="slide-title">Cómo funciona</h2>
-
-    <div class="flow">
-      <div class="flow-step">
-        <div class="flow-num">PASO 01</div>
-        <div class="flow-label">Preservar</div>
+        <div class="flow-title">Preservar</div>
         <div class="flow-desc">Asegurar toda la información con cadena de custodia digital. Nada se modifica, todo queda registrado.</div>
       </div>
-      <div class="flow-step">
-        <div class="flow-num">PASO 02</div>
-        <div class="flow-label">Reconstruir</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">PASO 02</div>
+      <div>
+        <div class="flow-title">Reconstruir</div>
         <div class="flow-desc">Armar la contabilidad real desde bancos, XML del SAT, y documentos soporte.</div>
       </div>
-      <div class="flow-step">
-        <div class="flow-num">PASO 03</div>
-        <div class="flow-label">Cruzar</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">PASO 03</div>
+      <div>
+        <div class="flow-title">Cruzar</div>
         <div class="flow-desc">Reconciliación automática: banco ↔ contabilidad ↔ facturación. Lo que no cuadra, se investiga.</div>
       </div>
-      <div class="flow-step">
-        <div class="flow-num">PASO 04</div>
-        <div class="flow-label">Detectar</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">PASO 04</div>
+      <div>
+        <div class="flow-title">Detectar</div>
         <div class="flow-desc">IA analiza patrones: montos, horarios, proveedores, relaciones ocultas, comportamiento anormal.</div>
       </div>
-      <div class="flow-step">
-        <div class="flow-num">PASO 05</div>
-        <div class="flow-label">Documentar</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">PASO 05</div>
+      <div>
+        <div class="flow-title">Documentar</div>
         <div class="flow-desc">Expediente con cada hallazgo, evidencia trazable, y cuantificación del daño.</div>
       </div>
     </div>
+  </div>
 
-    <div class="highlight-box" style="margin-top: 28px;">
-      <div class="hb-title">¿Qué detecta más rápido con IA?</div>
-      <div class="hb-body">Proveedores que comparten cuenta bancaria o RFC relacionados · Montos justo por debajo de umbrales de autorización · Ajustes recurrentes concentrados en un solo usuario · Operaciones fuera de horario o antes de cierres · Redes de relaciones entre proveedores, cuentas y personas que manualmente tomaría semanas mapear.</div>
+  <div class="callout reveal">
+    <div class="callout-title">¿Qué detecta la IA más rápido?</div>
+    <p>Proveedores que comparten cuenta bancaria o RFC · Montos justo bajo umbrales de autorización · Ajustes concentrados en un solo usuario · Operaciones fuera de horario · Redes de relaciones que manualmente tomaría semanas mapear.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- QUÉ NECESITAMOS -->
+<section>
+  <div class="reveal">
+    <span class="tag">Requerimientos</span>
+    <h2>¿Qué necesitamos para empezar?</h2>
+  </div>
+
+  <div class="compare reveal">
+    <div class="compare-col good" style="background:var(--surface); border-color:var(--border);">
+      <span class="compare-label" style="color:var(--accent);">Información mínima</span>
+      <ul class="check-list">
+        <li>Export del ERP: pólizas, auxiliares, balanza, catálogo de cuentas</li>
+        <li>Maestro de proveedores y clientes</li>
+        <li>Estados de cuenta bancarios (digitales)</li>
+        <li>CFDI emitidos y recibidos (XML del SAT)</li>
+        <li>Soportes: PDFs, contratos, órdenes de compra</li>
+        <li>Bitácora de usuarios del sistema</li>
+      </ul>
+    </div>
+    <div class="compare-col good" style="background:var(--surface); border-color:var(--border);">
+      <span class="compare-label" style="color:var(--accent);">Información del caso</span>
+      <ul class="check-list">
+        <li>Periodo bajo sospecha (fechas)</li>
+        <li>¿Cuándo empezó y terminó la persona?</li>
+        <li>Hipótesis inicial: ¿qué creen que pasó?</li>
+        <li>Objetivo: ¿despido, denuncia, recuperación?</li>
+        <li>¿Hay abogados involucrados?</li>
+        <li>Estimación preliminar del daño</li>
+      </ul>
     </div>
   </div>
 
-  <!-- SLIDE 6: QUÉ NECESITAMOS -->
-  <div class="slide" data-slide="6" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
-    <div class="slide-tag">Requerimientos</div>
-    <h2 class="slide-title">¿Qué necesitamos para empezar?</h2>
+  <div class="callout reveal">
+    <div class="callout-title">Seguridad y confidencialidad</div>
+    <p>NDA firmado antes de recibir cualquier información · Datos procesados localmente en infraestructura dedicada · Acceso restringido al equipo del proyecto · Destrucción o devolución de datos al finalizar · Entre más pronto se preserve la información, mejor.</p>
+  </div>
+</section>
 
-    <div class="grid-2">
-      <div>
-        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Información mínima</h3>
-        <ul class="clean-list">
-          <li>Export del ERP: pólizas, auxiliares, balanza, catálogo de cuentas</li>
-          <li>Maestro de proveedores y clientes</li>
-          <li>Estados de cuenta bancarios (digitales)</li>
-          <li>CFDI emitidos y recibidos (XML del SAT)</li>
-          <li>Soportes disponibles: PDFs, contratos, órdenes de compra</li>
-          <li>Bitácora de usuarios del sistema (si existe)</li>
-        </ul>
-      </div>
-      <div>
-        <h3 style="font-family:'Young Serif',serif; font-size:22px; color:var(--white); margin-bottom:20px;">Información del caso</h3>
-        <ul class="clean-list">
-          <li>Periodo bajo sospecha (fechas)</li>
-          <li>¿Cuándo empezó y terminó la persona?</li>
-          <li>Hipótesis inicial: ¿qué creen que pasó?</li>
-          <li>Objetivo: ¿despido, denuncia, recuperación?</li>
-          <li>¿Hay abogados involucrados?</li>
-          <li>Estimación preliminar del daño (si la hay)</li>
-        </ul>
-      </div>
+<div class="divider"></div>
+
+<!-- PAQUETES -->
+<section>
+  <div class="reveal">
+    <span class="tag">Inversión</span>
+    <h2>Paquetes de servicio</h2>
+  </div>
+
+  <div class="pricing reveal">
+    <div class="price-card">
+      <div class="price-phase">Fase 1</div>
+      <div class="price-name">Diagnóstico Rápido</div>
+      <div class="price-time">2–3 semanas</div>
+      <div class="price-amount">$250K–$450K</div>
+      <div class="price-unit">MXN · IVA no incluido</div>
+      <ul class="price-list">
+        <li>Preservación de información</li>
+        <li>Reconstrucción contable básica</li>
+        <li>Cruce banco–contabilidad–SAT</li>
+        <li>Detección de anomalías con IA</li>
+        <li>Top 10 hallazgos priorizados</li>
+        <li>Estimación preliminar de daño</li>
+        <li>Reporte ejecutivo</li>
+      </ul>
     </div>
 
-    <div class="highlight-box" style="margin-top:32px;">
-      <div class="hb-title">Seguridad y confidencialidad</div>
-      <div class="hb-body">NDA firmado antes de recibir cualquier información · Datos procesados localmente en infraestructura dedicada · Acceso restringido exclusivamente al equipo del proyecto · Destrucción o devolución de datos al finalizar · Entre más pronto se preserve la información, mejor — lo que se pierde o modifica no se recupera.</div>
+    <div class="price-card featured">
+      <div class="price-phase">Fase 2</div>
+      <div class="price-name">Investigación Profunda</div>
+      <div class="price-time">4–8 semanas</div>
+      <div class="price-amount">$900K–$2.5M</div>
+      <div class="price-unit">MXN · IVA no incluido</div>
+      <ul class="price-list">
+        <li>Todo lo de Diagnóstico Rápido</li>
+        <li>Modelo de datos completo</li>
+        <li>Análisis de patrones repetitivos</li>
+        <li>Mapeo de relaciones ocultas</li>
+        <li>Identificación de modus operandi</li>
+        <li>Cuantificación formal de daño</li>
+        <li>Expediente técnico completo</li>
+        <li>Dossier por caso con evidencia</li>
+      </ul>
+    </div>
+
+    <div class="price-card">
+      <div class="price-phase">Fase 3</div>
+      <div class="price-name">Soporte Legal</div>
+      <div class="price-time">Según necesidad</div>
+      <div class="price-amount">$150K–$350K</div>
+      <div class="price-unit">MXN/mes · Retainer</div>
+      <ul class="price-list">
+        <li>Documentación probatoria formal</li>
+        <li>Preparación para perito externo</li>
+        <li>Soporte técnico ante abogados</li>
+        <li>Aclaraciones y ampliaciones</li>
+        <li>Coordinación con autoridades</li>
+      </ul>
     </div>
   </div>
 
-  <!-- SLIDE 7: PAQUETES -->
-  <div class="slide" data-slide="7" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
-    <div class="slide-tag">Inversión</div>
-    <h2 class="slide-title">Paquetes de servicio</h2>
+  <p class="reveal" style="font-size:12px; color:var(--muted); text-align:center; margin-top:20px; font-family:'JetBrains Mono',monospace; line-height:1.6;">Precio según volumen de transacciones, entidades y años bajo revisión.<br>No incluye honorarios de perito externo ni asesoría legal. Cotización final después de reunión de scoping.</p>
+</section>
 
-    <div class="price-cards">
-      <div class="price-card">
-        <div class="price-card-tag">Fase 1</div>
-        <div class="price-card-name">Diagnóstico Rápido</div>
-        <div class="price-card-time">2–3 semanas</div>
-        <div class="price-card-price">$250K–$450K</div>
-        <div class="price-card-unit">MXN · IVA no incluido</div>
-        <ul class="price-card-list">
-          <li>Preservación de información</li>
-          <li>Reconstrucción contable básica</li>
-          <li>Cruce banco–contabilidad–SAT</li>
-          <li>Detección de anomalías con IA</li>
-          <li>Top 10 hallazgos priorizados</li>
-          <li>Estimación preliminar de daño</li>
-          <li>Reporte ejecutivo</li>
-        </ul>
-      </div>
+<div class="divider"></div>
 
-      <div class="price-card featured">
-        <div class="price-card-tag">Fase 2 · Recomendado</div>
-        <div class="price-card-name">Investigación Profunda</div>
-        <div class="price-card-time">4–8 semanas</div>
-        <div class="price-card-price">$900K–$2.5M</div>
-        <div class="price-card-unit">MXN · IVA no incluido</div>
-        <ul class="price-card-list">
-          <li>Todo lo de Diagnóstico Rápido</li>
-          <li>Modelo de datos completo</li>
-          <li>Análisis de patrones repetitivos</li>
-          <li>Mapeo de relaciones ocultas</li>
-          <li>Identificación de modus operandi</li>
-          <li>Cuantificación formal de daño</li>
-          <li>Expediente técnico completo</li>
-          <li>Dossier por caso con evidencia</li>
-        </ul>
-      </div>
-
-      <div class="price-card">
-        <div class="price-card-tag">Fase 3</div>
-        <div class="price-card-name">Soporte Legal</div>
-        <div class="price-card-time">Según necesidad</div>
-        <div class="price-card-price">$150K–$350K</div>
-        <div class="price-card-unit">MXN/mes · Retainer</div>
-        <ul class="price-card-list">
-          <li>Documentación probatoria formal</li>
-          <li>Preparación para perito externo</li>
-          <li>Soporte técnico ante abogados</li>
-          <li>Aclaraciones y ampliaciones</li>
-          <li>Coordinación con autoridades</li>
-        </ul>
-      </div>
-    </div>
-
-    <p style="font-size:13px; color:var(--mid); text-align:center; margin-top:24px; font-family:'IBM Plex Mono',monospace;">Precio según volumen de transacciones, entidades y años bajo revisión. No incluye honorarios de perito externo ni asesoría legal. Cotización final después de reunión de scoping.</p>
+<!-- TIMELINE -->
+<section>
+  <div class="reveal">
+    <span class="tag">Calendario</span>
+    <h2>Cronograma típico</h2>
   </div>
 
-  <!-- SLIDE 8: TIMELINE -->
-  <div class="slide" data-slide="8" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
-    <div class="slide-tag">Calendario</div>
-    <h2 class="slide-title">Cronograma típico</h2>
-
-    <div class="grid-2">
-      <div class="timeline">
-        <div class="tl-item">
-          <div class="tl-week">SEMANA 1</div>
-          <div class="tl-title">Preservación + Reconstrucción</div>
-          <div class="tl-desc">Cadena de custodia, ingesta de datos, modelo canónico, parseo de XML/bancos.</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-week">SEMANA 2</div>
-          <div class="tl-title">Reconciliación + Triage</div>
-          <div class="tl-desc">Cruces automáticos, reglas forenses, perfilamiento por usuario, primeros hallazgos.</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-week">SEMANA 3</div>
-          <div class="tl-title">Reporte de Diagnóstico</div>
-          <div class="tl-desc">Top hallazgos, estimación de daño, recomendaciones de siguiente paso.</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-week">SEMANA 4–8</div>
-          <div class="tl-title">Investigación Profunda</div>
-          <div class="tl-desc">Análisis de relaciones, modus operandi, cuantificación, expediente completo.</div>
-        </div>
-      </div>
-
-      <div>
-        <div class="highlight-box" style="margin-top:0;">
-          <div class="hb-title">Primeros indicios en días</div>
-          <div class="hb-body">A diferencia de una auditoría tradicional que toma semanas solo para empezar, con IA los primeros patrones sospechosos emergen en los primeros 3–5 días hábiles. Esto permite tomar decisiones tempranas.</div>
-        </div>
-
-        <div class="highlight-box">
-          <div class="hb-title">Enfoque modular</div>
-          <div class="hb-body">Puedes empezar solo con el Diagnóstico Rápido. Si los hallazgos lo justifican, se procede a la investigación profunda. No hay compromiso de proyecto completo desde el inicio.</div>
-        </div>
-      </div>
+  <div class="timeline reveal">
+    <div class="tl-item">
+      <div class="tl-week">SEMANA 1</div>
+      <div class="tl-title">Preservación + Reconstrucción</div>
+      <div class="tl-desc">Cadena de custodia, ingesta de datos, modelo canónico, parseo de XML/bancos.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-week">SEMANA 2</div>
+      <div class="tl-title">Reconciliación + Triage</div>
+      <div class="tl-desc">Cruces automáticos, reglas forenses, perfilamiento por usuario, primeros hallazgos.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-week">SEMANA 3</div>
+      <div class="tl-title">Reporte de Diagnóstico</div>
+      <div class="tl-desc">Top hallazgos, estimación de daño, recomendaciones de siguiente paso.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-week">SEMANA 4–8</div>
+      <div class="tl-title">Investigación Profunda</div>
+      <div class="tl-desc">Análisis de relaciones, modus operandi, cuantificación, expediente completo.</div>
     </div>
   </div>
 
-  <!-- SLIDE 9: ENTREGABLES -->
-  <div class="slide" data-slide="9" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
-    <div class="slide-tag">Entregables</div>
-    <h2 class="slide-title">¿Qué recibes al final?</h2>
+  <div class="callout reveal" style="margin-top:32px;">
+    <div class="callout-title">Enfoque modular</div>
+    <p>Puedes empezar solo con el Diagnóstico Rápido. Si los hallazgos lo justifican, se procede a la investigación profunda. No hay compromiso de proyecto completo desde el inicio. Primeros patrones sospechosos emergen en 3–5 días hábiles.</p>
+  </div>
+</section>
 
-    <div class="grid-3">
-      <div class="card">
-        <div class="card-number">01</div>
-        <div class="card-title">Reporte Ejecutivo</div>
-        <div class="card-body">Resumen claro para directivos: qué pasó, cuánto se perdió, quién lo hizo, qué hacer. Sin jerga técnica.</div>
-      </div>
-      <div class="card">
-        <div class="card-number">02</div>
-        <div class="card-title">Expediente Técnico</div>
-        <div class="card-body">Cada hallazgo documentado con evidencia trazable, timeline de eventos, y scripts reproducibles.</div>
-      </div>
-      <div class="card">
-        <div class="card-number">03</div>
-        <div class="card-title">Cuantificación de Daño</div>
-        <div class="card-body">Monto estimado del fraude con metodología explícita, rangos de confianza, y desglose por tipo.</div>
-      </div>
-      <div class="card">
-        <div class="card-number">04</div>
-        <div class="card-title">Dossier por Caso</div>
-        <div class="card-body">Cada esquema de fraude identificado con su propia ficha: evidencia, personas involucradas, montos, fechas.</div>
-      </div>
-      <div class="card">
-        <div class="card-number">05</div>
-        <div class="card-title">Mapa de Relaciones</div>
-        <div class="card-body">Visualización de conexiones ocultas entre proveedores, cuentas bancarias, usuarios y transacciones.</div>
-      </div>
-      <div class="card">
-        <div class="card-number">06</div>
-        <div class="card-title">Recomendaciones</div>
-        <div class="card-body">Controles internos sugeridos para prevenir que vuelva a pasar. Mejoras al proceso contable.</div>
-      </div>
-    </div>
+<div class="divider"></div>
 
-    <p style="font-size:14px; color:var(--gray); margin-top:28px;">Todo el expediente está diseñado para ser utilizable por abogados, auditores externos, o peritos en caso de procedimiento legal.</p>
+<!-- ENTREGABLES -->
+<section>
+  <div class="reveal">
+    <span class="tag">Entregables</span>
+    <h2>¿Qué recibes al final?</h2>
   </div>
 
-  <!-- SLIDE 10: ALCANCE -->
-  <div class="slide" data-slide="10" style="background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);">
-    <div class="slide-tag">Alcance</div>
-    <h2 class="slide-title">Qué incluye y qué no</h2>
-
-    <div class="compare-cols">
-      <div class="compare-col good">
-        <div class="compare-label">✓ Incluido</div>
-        <div class="compare-item">Análisis técnico de datos con IA</div>
-        <div class="compare-item">Reconstrucción contable desde fuentes primarias</div>
-        <div class="compare-item">Detección de anomalías y patrones</div>
-        <div class="compare-item">Mapeo de relaciones (proveedores, cuentas, usuarios)</div>
-        <div class="compare-item">Cuantificación preliminar del daño</div>
-        <div class="compare-item">Expediente técnico con evidencia trazable</div>
-        <div class="compare-item">Scripts reproducibles para validación</div>
-      </div>
-      <div class="compare-col bad">
-        <div class="compare-label">✗ No incluido</div>
-        <div class="compare-item">Dictamen pericial para juicio (requiere perito autorizado)</div>
-        <div class="compare-item">Asesoría legal o representación jurídica</div>
-        <div class="compare-item">Auditoría fiscal o de cumplimiento normativo</div>
-        <div class="compare-item">Investigación de fraude en efectivo o fuera del sistema</div>
-        <div class="compare-item">Garantía de hallazgos específicos (depende de los datos)</div>
-      </div>
+  <div class="card-grid cols-2 reveal">
+    <div class="card">
+      <span class="card-num">01</span>
+      <h3>Reporte Ejecutivo</h3>
+      <p>Resumen claro para directivos: qué pasó, cuánto se perdió, quién lo hizo, qué hacer. Sin jerga técnica.</p>
     </div>
-
-    <div class="highlight-box" style="margin-top:28px;">
-      <div class="hb-title">Para uso legal</div>
-      <div class="hb-body">El expediente técnico está diseñado para alimentar directamente a un perito certificado o abogado. Yo hago el 90% del trabajo analítico — el perito valida, firma, y lo presenta. Esto reduce tiempo y costo significativamente vs. un peritaje tradicional desde cero.</div>
+    <div class="card">
+      <span class="card-num">02</span>
+      <h3>Expediente Técnico</h3>
+      <p>Cada hallazgo documentado con evidencia trazable, timeline de eventos, y scripts reproducibles.</p>
+    </div>
+    <div class="card">
+      <span class="card-num">03</span>
+      <h3>Cuantificación de Daño</h3>
+      <p>Monto estimado del fraude con metodología explícita, rangos de confianza, y desglose por tipo.</p>
+    </div>
+    <div class="card">
+      <span class="card-num">04</span>
+      <h3>Dossier por Caso</h3>
+      <p>Cada esquema de fraude con su ficha: evidencia, personas involucradas, montos, fechas.</p>
+    </div>
+    <div class="card">
+      <span class="card-num">05</span>
+      <h3>Mapa de Relaciones</h3>
+      <p>Visualización de conexiones ocultas entre proveedores, cuentas bancarias, usuarios y transacciones.</p>
+    </div>
+    <div class="card">
+      <span class="card-num">06</span>
+      <h3>Recomendaciones</h3>
+      <p>Controles internos sugeridos para prevenir que vuelva a pasar. Mejoras al proceso contable.</p>
     </div>
   </div>
 
-  <!-- SLIDE 11: CIERRE -->
-  <div class="slide slide-cover" data-slide="11">
-    <div class="cover-tag">Siguiente paso</div>
-    <div class="cover-line"></div>
-    <h1 class="cover-title" style="font-size:56px;">¿Empezamos con<br>el diagnóstico?</h1>
-    <p class="cover-subtitle" style="font-size:20px; max-width:700px;">El primer paso es una conversación de 30 minutos para entender el caso, definir alcance, y confirmar qué información está disponible. Sin compromiso.</p>
-    
-    <div style="margin-top: 40px;">
-      <p style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--accent); letter-spacing:2px; margin-bottom:12px;">CONTACTO</p>
-      <p style="font-size:18px; color:var(--white); margin-bottom:6px;">Raul Zhou</p>
-      <p style="font-size:15px; color:var(--gray);">raul.chio.leon@gmail.com</p>
+  <p class="reveal body-text" style="margin-top:24px;">Todo el expediente está diseñado para ser utilizable por abogados, auditores externos, o peritos en caso de procedimiento legal.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- ALCANCE -->
+<section>
+  <div class="reveal">
+    <span class="tag">Alcance</span>
+    <h2>Qué incluye y qué no</h2>
+  </div>
+
+  <div class="compare reveal">
+    <div class="compare-col good">
+      <span class="compare-label">✓ Incluido</span>
+      <div class="compare-item">Análisis técnico de datos con IA</div>
+      <div class="compare-item">Reconstrucción contable desde fuentes primarias</div>
+      <div class="compare-item">Detección de anomalías y patrones</div>
+      <div class="compare-item">Mapeo de relaciones</div>
+      <div class="compare-item">Cuantificación preliminar del daño</div>
+      <div class="compare-item">Expediente técnico con evidencia trazable</div>
+      <div class="compare-item">Scripts reproducibles para validación</div>
+    </div>
+    <div class="compare-col bad">
+      <span class="compare-label">✗ No incluido</span>
+      <div class="compare-item">Dictamen pericial para juicio</div>
+      <div class="compare-item">Asesoría legal o representación jurídica</div>
+      <div class="compare-item">Auditoría fiscal o de cumplimiento</div>
+      <div class="compare-item">Investigación de fraude en efectivo</div>
+      <div class="compare-item">Garantía de hallazgos específicos</div>
     </div>
   </div>
 
-</div>
+  <div class="callout reveal">
+    <div class="callout-title">Para uso legal</div>
+    <p>El expediente técnico alimenta directamente a un perito certificado o abogado. Yo hago el 90% del trabajo analítico — el perito valida, firma, y lo presenta. Esto reduce tiempo y costo vs. un peritaje tradicional desde cero.</p>
+  </div>
+</section>
 
-<!-- NAV -->
-<div class="slide-counter"><span id="current">1</span> / <span id="total">9</span></div>
-<div class="nav">
-  <button onclick="go(-1)">←</button>
-  <button onclick="go(1)">→</button>
-</div>
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="reveal">
+    <span class="tag">Siguiente paso</span>
+    <h2>¿Empezamos con el diagnóstico?</h2>
+    <p class="lead" style="margin: 0 auto;">El primer paso es una conversación de 30 minutos para entender el caso, definir alcance, y confirmar qué información está disponible. Sin compromiso.</p>
+    <div class="cta-contact">
+      CONTACTO
+      <span>Raul Zhou</span>
+      <a href="mailto:raul.chio.leon@gmail.com">raul.chio.leon@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  CONFIDENCIAL · RAUL ZHOU · 2025
+</footer>
 
 <script>
-  let cur = 1;
-  const total = document.querySelectorAll('.slide').length;
-  document.getElementById('total').textContent = total;
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-  function go(d) {
-    const next = cur + d;
-    if (next < 1 || next > total) return;
-    document.querySelector('.slide.active').classList.remove('active');
-    cur = next;
-    const s = document.querySelector(`[data-slide="${cur}"]`);
-    s.style.display = 'flex';
-    requestAnimationFrame(() => { s.classList.add('active'); });
-    document.getElementById('current').textContent = cur;
-  }
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === ' ') go(1);
-    if (e.key === 'ArrowLeft') go(-1);
-  });
-
-  // Touch swipe
-  let tx = 0;
-  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
-  document.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - tx;
-    if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
-  });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 
 </body>
