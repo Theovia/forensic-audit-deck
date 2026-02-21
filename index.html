@@ -739,30 +739,23 @@
 
       <!-- Row 1 -->
       <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
-        <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Pólizas / asientos contables (ERP)</div>
-        <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Es la columna vertebral. Cada movimiento contable queda aquí. Sin esto, no hay nada que analizar — es el equivalente a pedir un expediente médico sin el historial clínico.</div>
+        <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Export completo del ERP (pólizas con detalle de auxiliares, catálogo de cuentas)</div>
+        <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Columna vertebral del análisis. Cada movimiento contable con su detalle por cuenta: de dónde salió el dinero, a dónde fue, quién lo capturó. Sin esto, no hay nada que analizar.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
       </div>
 
       <!-- Row 2 -->
       <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
-        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Auxiliares de cuentas</div>
-        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Detalle transacción por transacción de cada cuenta. Permite reconstruir la trazabilidad completa: de dónde salió el dinero, a dónde fue, y quién lo autorizó.</div>
-        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Balanza de comprobación mensual</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Foto mensual del estado de todas las cuentas. Sirve como validación cruzada: comparar la balanza reportada vs. la que recalculamos desde las pólizas. Si no cuadran, hubo manipulación post-cierre.</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
       </div>
 
       <!-- Row 3 -->
       <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
-        <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Balanza de comprobación mensual</div>
-        <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Foto mensual del estado de todas las cuentas. Permite detectar saltos anómalos entre periodos — si una cuenta sube 300% en un mes, algo pasó ahí.</div>
+        <div style="background:var(--slate); padding:10px 16px; font-weight:600; color:var(--white);">Estados de cuenta bancarios (digitales)</div>
+        <div style="background:var(--slate); padding:10px 16px; color:var(--gray);">Fuente de verdad externa e independiente. Lo que dice el banco vs. lo que dice la contabilidad. Si no cuadran, ahí está el problema. Es la prueba más difícil de manipular.</div>
         <div style="background:var(--slate); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
-      </div>
-
-      <!-- Row 4 -->
-      <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
-        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Estados de cuenta bancarios (digitales)</div>
-        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Fuente de verdad externa e independiente. Lo que dice el banco vs. lo que dice la contabilidad. Si no cuadran, ahí está el problema. Es la prueba más difícil de manipular.</div>
-        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--red); color:white; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">CRÍTICO</span></div>
       </div>
 
       <!-- Row 5 -->
@@ -803,8 +796,8 @@
       <!-- Row 10 -->
       <div style="display:grid; grid-template-columns:2fr 3fr 100px; gap:2px;">
         <div style="background:rgba(30,41,59,0.6); padding:10px 16px; font-weight:600; color:var(--white);">Correos corporativos relevantes</div>
-        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Contexto y comunicación. Autorizaciones por email, negociaciones con proveedores, presión para aprobar pagos. No siempre está disponible, pero cuando existe, conecta los puntos entre los números y las personas.</div>
-        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--green); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">MEDIO</span></div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; color:var(--gray);">Autorizaciones por email, negociaciones con proveedores, presión para aprobar pagos. Conecta los datos numéricos con las personas y la intención. Evidencia de contexto invaluable para atribución.</div>
+        <div style="background:rgba(30,41,59,0.6); padding:10px 16px; text-align:center;"><span style="background:var(--amber); color:var(--dark); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">ALTO</span></div>
       </div>
 
       <!-- Row 11 -->
@@ -946,16 +939,16 @@
 
       <div class="price-card">
         <div class="price-card-tag">Fase 3</div>
-        <div class="price-card-name">Soporte Legal</div>
+        <div class="price-card-name">Soporte Técnico</div>
         <div class="price-card-time">Según necesidad</div>
-        <div class="price-card-price">$200K–$450K</div>
-        <div class="price-card-unit">MXN/mes · Retainer</div>
+        <div class="price-card-price">Por entregable</div>
+        <div class="price-card-unit">Cotización según alcance</div>
         <ul class="price-card-list">
-          <li>Documentación probatoria formal</li>
-          <li>Preparación para perito externo</li>
-          <li>Soporte técnico ante abogados</li>
-          <li>Aclaraciones y ampliaciones</li>
-          <li>Coordinación con autoridades</li>
+          <li>Ampliación de análisis: $80K–$150K por solicitud</li>
+          <li>Comparecencia como soporte técnico: $25K–$50K por sesión</li>
+          <li>Preparación de datos para perito externo</li>
+          <li>Aclaraciones y re-procesamientos</li>
+          <li>Análisis adicionales bajo demanda</li>
         </ul>
       </div>
     </div>
@@ -1103,9 +1096,34 @@
       </div>
     </div>
 
-    <div class="highlight-box" style="margin-top:28px;">
-      <div class="hb-title">Admisibilidad legal</div>
-      <div class="hb-body">El expediente técnico está diseñado como insumo directo para perito certificado o abogado litigante. El análisis técnico cubre el grueso del trabajo de datos — el perito valida, firma y presenta ante autoridad. Esto reduce significativamente el tiempo y costo de un peritaje tradicional desde cero.</div>
+    <div style="margin-top:28px; background:rgba(30,41,59,0.4); border:1px solid rgba(59,130,246,0.15); border-radius:16px; padding:28px 32px;">
+      <h3 style="font-family:'Young Serif',serif; font-size:18px; color:var(--accent2); margin-bottom:16px;">¿Qué puedes hacer con este análisis?</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div style="display:flex; gap:8px; align-items:flex-start;">
+          <span style="color:var(--green); font-size:16px;">✓</span>
+          <span style="font-size:13px; color:var(--gray); line-height:1.5;"><strong style="color:var(--white);">Tomar decisiones internas</strong> — despido, reestructura, cambio de controles</span>
+        </div>
+        <div style="display:flex; gap:8px; align-items:flex-start;">
+          <span style="color:var(--green); font-size:16px;">✓</span>
+          <span style="font-size:13px; color:var(--gray); line-height:1.5;"><strong style="color:var(--white);">Negociar con el sospechoso</strong> — evidencia técnica como palanca</span>
+        </div>
+        <div style="display:flex; gap:8px; align-items:flex-start;">
+          <span style="color:var(--green); font-size:16px;">✓</span>
+          <span style="font-size:13px; color:var(--gray); line-height:1.5;"><strong style="color:var(--white);">Insumo para peritaje contable</strong> — el perito valida y firma, no reconstruye desde cero</span>
+        </div>
+        <div style="display:flex; gap:8px; align-items:flex-start;">
+          <span style="color:var(--green); font-size:16px;">✓</span>
+          <span style="font-size:13px; color:var(--gray); line-height:1.5;"><strong style="color:var(--white);">Soporte para denuncia penal</strong> — evidencia técnica complementaria al dictamen del perito</span>
+        </div>
+        <div style="display:flex; gap:8px; align-items:flex-start;">
+          <span style="color:var(--green); font-size:16px;">✓</span>
+          <span style="font-size:13px; color:var(--gray); line-height:1.5;"><strong style="color:var(--white);">Cuantificar daño para recuperación</strong> — estimación técnica para demanda civil</span>
+        </div>
+        <div style="display:flex; gap:8px; align-items:flex-start;">
+          <span style="color:var(--green); font-size:16px;">✓</span>
+          <span style="font-size:13px; color:var(--gray); line-height:1.5;"><strong style="color:var(--white);">Diseñar controles preventivos</strong> — que no vuelva a pasar</span>
+        </div>
+      </div>
     </div>
 
     <div style="margin-top:20px; padding:16px 24px; border:1px solid rgba(148,163,184,0.15); border-radius:10px; background:rgba(15,23,42,0.5);">
