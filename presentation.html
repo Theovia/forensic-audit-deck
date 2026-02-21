@@ -501,74 +501,94 @@
 
   /* MOBILE RESPONSIVE */
   @media (max-width: 768px) {
+    body { overflow: visible; height: auto; }
+    .deck { height: auto; }
+
     .slide {
-      padding: 24px 20px;
+      padding: 20px 16px 80px;
       justify-content: flex-start;
-      padding-top: 40px;
+      padding-top: 32px;
       overflow-y: auto;
+      position: relative;
+      min-height: 100vh;
+      height: auto;
     }
-    .cover-title { font-size: 36px; }
-    .cover-subtitle { font-size: 16px; margin-bottom: 32px; }
-    .cover-tag { font-size: 11px; letter-spacing: 3px; margin-bottom: 20px; }
-    .cover-line { margin-bottom: 24px; }
-    .slide-title { font-size: 28px; margin-bottom: 24px; }
-    .slide-tag { font-size: 10px; margin-bottom: 10px; }
-    .slide-body { font-size: 15px; line-height: 1.6; }
+    .slide:not(.active) { display: none; }
+
+    .cover-title { font-size: 28px; line-height: 1.15; }
+    .cover-subtitle { font-size: 14px; margin-bottom: 24px; line-height: 1.5; max-width: 100%; }
+    .cover-tag { font-size: 10px; letter-spacing: 2px; margin-bottom: 16px; }
+    .cover-line { margin-bottom: 16px; }
+    .cover-meta { font-size: 10px; }
+
+    .slide-title { font-size: 22px; margin-bottom: 16px; line-height: 1.2; }
+    .slide-tag { font-size: 9px; margin-bottom: 8px; }
+    .slide-body { font-size: 14px; line-height: 1.5; }
 
     .grid-3, .grid-2, .compare-cols, .price-cards {
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 12px;
     }
     .stat-row {
-      flex-direction: column;
-      gap: 24px;
-      margin: 24px 0;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin: 16px 0;
     }
-    .stat-number { font-size: 40px; }
-    .stat-label { font-size: 11px; }
+    .stat-item { flex: 1 1 40%; }
+    .stat-number { font-size: 32px; }
+    .stat-label { font-size: 10px; letter-spacing: 1px; }
 
     .flow {
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
     }
     .flow-step::after { display: none; }
-    .flow-step { padding: 20px 16px; }
-    .flow-label { font-size: 15px; }
-    .flow-desc { font-size: 12px; }
+    .flow-step { padding: 14px 12px; }
+    .flow-num { font-size: 9px; margin-bottom: 4px; }
+    .flow-label { font-size: 14px; margin-bottom: 4px; }
+    .flow-desc { font-size: 11px; }
 
-    .card { padding: 24px 20px; }
-    .card-number { font-size: 36px; }
-    .card-title { font-size: 18px; }
-    .card-body { font-size: 14px; }
+    .card { padding: 18px 14px; }
+    .card-number { font-size: 28px; top: 12px; right: 14px; }
+    .card-title { font-size: 16px; margin-bottom: 8px; }
+    .card-body { font-size: 12px; }
 
-    .highlight-box { padding: 20px; margin-top: 20px; }
-    .highlight-box .hb-title { font-size: 17px; }
-    .highlight-box .hb-body { font-size: 14px; }
+    .highlight-box { padding: 14px 16px; margin-top: 14px; }
+    .highlight-box .hb-title { font-size: 15px; margin-bottom: 8px; }
+    .highlight-box .hb-body { font-size: 12px; line-height: 1.5; }
 
-    .clean-list li { font-size: 14px; padding: 8px 0 8px 20px; }
-    .clean-list li::before { top: 14px; width: 6px; height: 6px; }
+    .clean-list li { font-size: 13px; padding: 6px 0 6px 18px; line-height: 1.4; }
+    .clean-list li::before { top: 12px; width: 5px; height: 5px; }
 
-    .clean-table th { font-size: 10px; padding: 8px 12px; }
-    .clean-table td { font-size: 13px; padding: 10px 12px; }
+    .clean-table th { font-size: 9px; padding: 6px 8px; }
+    .clean-table td { font-size: 12px; padding: 8px; }
 
-    .price-card { padding: 24px 20px; }
-    .price-card-name { font-size: 20px; }
-    .price-card-price { font-size: 26px; }
+    .compare-col { padding: 18px 14px; }
+    .compare-label { font-size: 10px; margin-bottom: 10px; }
+    .compare-item { font-size: 13px; padding: 5px 0; }
+
+    .price-card { padding: 20px 16px; text-align: left; }
+    .price-card-name { font-size: 18px; }
+    .price-card-price { font-size: 22px; }
+    .price-card-time { font-size: 12px; }
+    .price-card-unit { font-size: 10px; }
     .price-card-list li { font-size: 12px; }
 
-    .timeline { padding-left: 28px; margin-top: 20px; }
-    .tl-item::before { left: -22px; }
+    .timeline { padding-left: 24px; margin-top: 16px; }
+    .tl-item { margin-bottom: 18px; }
+    .tl-item::before { left: -18px; width: 8px; height: 8px; }
     .timeline::before { left: 6px; }
-    .tl-title { font-size: 15px; }
-    .tl-desc { font-size: 13px; }
+    .tl-week { font-size: 9px; }
+    .tl-title { font-size: 14px; }
+    .tl-desc { font-size: 12px; }
 
-    .nav { bottom: 16px; right: 16px; }
-    .nav button { width: 40px; height: 40px; font-size: 16px; }
-    .slide-counter { bottom: 22px; left: 20px; font-size: 11px; }
+    .nav { bottom: 12px; right: 12px; gap: 8px; }
+    .nav button { width: 36px; height: 36px; font-size: 14px; }
+    .slide-counter { bottom: 18px; left: 16px; font-size: 10px; }
 
-    .cover-meta { font-size: 11px; }
+    .slide-cover { padding: 32px 16px; }
 
-    .slide-cover { padding: 40px 24px; }
+    h3[style] { font-size: 18px !important; margin-bottom: 12px !important; }
   }
 
   /* Touch swipe support */
